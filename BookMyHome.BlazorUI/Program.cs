@@ -1,3 +1,4 @@
+using BookMyHome.Application;
 using BookMyHome.BlazorUI.Components;
 
 namespace BookMyHome.BlazorUI
@@ -11,6 +12,8 @@ namespace BookMyHome.BlazorUI
 			// Add services to the container.
 			builder.Services.AddRazorComponents()
 				.AddInteractiveServerComponents();
+
+			builder.Services.AddApplication();
 
 			var app = builder.Build();
 

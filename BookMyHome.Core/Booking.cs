@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace BookMyHome.Core
 {
-	internal class Booking
+	public class Booking
 	{
         public int BookingId { get; set; }
 		public DateOnly CheckIn { get; set; }
