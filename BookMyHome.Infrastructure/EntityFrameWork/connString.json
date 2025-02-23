@@ -1,0 +1,5 @@
+{
+  "ConnectionStrings": {
+    "DefaultConnection": "Server=CHRISTOPHER; Database=BookMyHome; Trusted_Connection=True; TrustServerCertificate=True"
+  }
+}
