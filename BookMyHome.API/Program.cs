@@ -1,4 +1,8 @@
 
+using BookMyHome.Infrastructure;
+using BookMyHome.Infrastructure.EntityFrameWork;
+using Microsoft.EntityFrameworkCore;
+
 namespace BookMyHome.API
 {
 	public class Program
@@ -8,7 +12,12 @@ namespace BookMyHome.API
 			var builder = WebApplication.CreateBuilder(args);
 
 			// Add services to the container.
-
+			builder.Services.AddDbContext<EntityFrameworkDBContext>(options =>
+				options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"),
+				options => options.MigrationsAssembly("BookMyHome.API")
+				));
+			builder.Services.AddInfrastructure();
+		
 			builder.Services.AddControllers();
 			// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 			builder.Services.AddEndpointsApiExplorer();
