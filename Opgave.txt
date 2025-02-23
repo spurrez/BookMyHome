@@ -1,0 +1,164 @@
+
+Projekt: BookMyHome case
+
+For an IT system similar to Airbnb, which facilitates short-term rentals and experiences. Here's a revised set of requirements tailored to such a platform:
+Functional Requirements:
+
+    User Registration and Authentication:
+        Users can register as hosts or guests using email or social media accounts.
+
+    Accommodation Listings:
+        Hosts can create, edit, and delete listings for their accommodations, including homes, apartments, and unique stays.
+        Listings feature details such as location, accommodation type, price, amenities, house rules, photos, and availability.
+
+    Search and Filters for Accommodations and Experiences:
+        Guests can search for accommodations and experiences based on location, dates, price range, type of accommodation, and specific amenities or activities.
+        Advanced filtering options to refine search results, including guest ratings and host language.
+
+    Booking and Reservations:
+        Instant booking options for accommodations and experiences, with calendar integrations for availability.
+        Reservation system that allows hosts to approve or decline bookings based on their preferences.
+
+    Messaging System:
+        In-app messaging for guests and hosts to communicate regarding bookings, accommodations, and experiences.
+
+    Reviews and Ratings:
+        Guests can leave reviews and ratings for accommodations and experiences they've participated in.
+        Hosts can review guests to build trust within the community.
+
+    User Profiles and Dashboards:
+        Hosts have dashboards for managing listings, bookings, and guest communications.
+        Guests have profiles to manage bookings, wishlists, and review their travel history.
+
+    Wishlist Functionality:
+        Guests can save favorite accommodations and experiences to wishlists for future reference.
+
+Non-Functional Requirements:
+
+    Usability:
+        Intuitive and engaging user interfaces for web platforms.
+        Comprehensive onboarding process for new users.
+
+    Performance:
+        High performance for search functionalities and image loading.
+        Scalable architecture to support peak usage times and rapid growth.
+
+    Security:
+        The system must be resilient to the most common security risks to web applications.
+        The system must enforce authorization.
+
+    Reliability:
+        System availability and reliability, especially for booking functionalities.
+
+    Scalability:
+        Ability to scale resources dynamically to meet varying loads and user growth.
+
+    Maintainability:
+        The code must be testable, have a low coupling high cohesion.
+
+
+
+
+
+
+    Man kan ikke booke i fortiden.
+
+    Booking sker på dato - dvs. uden tidspunkt.
+
+    En booking er fra og med startdato til og med slutdato
+
+    Slutdato skal ligge efter startdato
+
+    Der må ikke være overlappende bookings. Dvs.
+        Ved opret og ret skal det tjekkes at der ikke opstår overlappende bookings. Sker det skal der kastes en Custom exception - "OverlapingBookingException"
+
+
+
+
+public class BookingService : IBookingService
+	{
+		private readonly HttpClient httpClient;
+		public BookingService(HttpClient httpClient)
+		{
+			this.httpClient = httpClient;
+		}
+		public async Task<IEnumerable<Booking>?> GetAllBookings()
+		{
+			var result = await httpClient.GetFromJsonAsync<Booking[]>("api/booking");
+			return result ?? Array.Empty<Booking>();
+		}
+
+		public async Task<Booking?> GetBookingById(int id)
+		{
+			var result = await httpClient.GetFromJsonAsync<Booking>($"api/booking/{id}");
+			return result;
+		}
+		public async Task<Booking> CreateBooking(Booking booking)
+		{
+			var response = await httpClient.PostAsJsonAsync("api/booking", booking);
+
+			// Make sure the request was successful
+			response.EnsureSuccessStatusCode();
+
+			// Deserialize the response body to a Booking object
+			var createdBooking = await response.Content.ReadFromJsonAsync<Booking>();
+			return createdBooking;
+		}
+
+		public async Task<Booking> UpdateBooking(int id, Booking booking)
+		{
+			var response = await httpClient.PutAsJsonAsync<Booking>($"api/booking/{id}", booking);
+			response.EnsureSuccessStatusCode();
+			var updatedBooking = await response.Content.ReadFromJsonAsync<Booking>();
+			return updatedBooking;
+		}
+
+		public async Task<bool> DeleteBooking(int id)
+		{
+			var response = await httpClient.DeleteAsync($"api/booking/{id}");
+			return response.IsSuccessStatusCode;
+		}
+	}
+
+
+    public class BookingServiceBlazor : IBookingServiceBlazor
+	{
+		private readonly IBookingRepository _bookingRepository;
+
+		public BookingServiceBlazor(IBookingRepository bookingRepository)
+		{
+			_bookingRepository = bookingRepository;
+		}
+
+		public async Task<IEnumerable<Booking>> GetAllBookings()
+		{
+			return await _bookingRepository.GetAllBookings();
+		}
+
+		public async Task<Booking?> GetBookingById(Guid id)
+		{
+			return await _bookingRepository.GetBookingById(id);
+		}
+
+		public async Task<Booking> CreateBooking(Booking booking)
+		{
+			// Check for overlap or other business rules
+			var existingBookings = await _bookingRepository.GetAllBookings();
+			if (booking.IsOverLapping(existingBookings))
+				throw new Exception("The booking overlaps with another.");
+
+			// Save the new booking
+			return await _bookingRepository.CreateBooking(booking);
+		}
+
+		public async Task<Booking> UpdateBooking(Guid id, Booking booking)
+		{
+			booking.BookingId = id;
+			return await _bookingRepository.UpdateBooking(booking);
+		}
+
+		public async Task<bool> DeleteBooking(Guid id)
+		{
+			return await _bookingRepository.DeleteBooking(id);
+		}
+	}
