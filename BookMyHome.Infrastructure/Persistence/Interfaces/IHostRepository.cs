@@ -1,5 +1,4 @@
 ﻿using BookMyHome.Core.Entities;
-using BookMyHome.Infrastructure.GenericRepo;
 using Microsoft.EntityFrameworkCore.Metadata.Conventions;
 using System;
 using System.Collections.Generic;

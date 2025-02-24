@@ -1,6 +1,5 @@
 ﻿using BookMyHome.Core.Entities;
 using BookMyHome.Infrastructure.EntityFrameWork;
-using BookMyHome.Infrastructure.GenericRepo;
 using BookMyHome.Infrastructure.Persistence.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using System;

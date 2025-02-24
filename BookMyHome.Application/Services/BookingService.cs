@@ -8,6 +8,7 @@ using System.Linq;
 using System.Net.Http.Json;
 using System.Text;
 using System.Threading.Tasks;
+using BookMyHome.Core.CustomException;
 
 namespace BookMyHome.Application.Services
 {
@@ -34,7 +35,7 @@ namespace BookMyHome.Application.Services
 		{
 			var existingBookings = await _bookingRepository.GetAllBookings();
 			if (booking.IsOverLapping(existingBookings))
-				throw new Exception("The booking overlaps with another.");
+				throw new OverlappingBookingException();
 
 			return await _bookingRepository.CreateBooking(booking);
 		}
@@ -43,7 +44,7 @@ namespace BookMyHome.Application.Services
 		{
 			var existingBookings = await _bookingRepository.GetAllBookings();
 			if (booking.IsOverLapping(existingBookings))
-				throw new Exception("The booking overlaps with another.");
+				throw new OverlappingBookingException();
 			return await _bookingRepository.UpdateBooking(id, booking);
 		}
 
