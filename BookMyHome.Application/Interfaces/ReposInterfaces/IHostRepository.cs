@@ -1,12 +1,11 @@
 ﻿using BookMyHome.Core.Entities;
-using Microsoft.EntityFrameworkCore.Metadata.Conventions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace BookMyHome.Infrastructure.Persistence.Interfaces
+namespace BookMyHome.Application.Interfaces.ReposInterfaces
 {
 	public interface IHostRepository
 	{

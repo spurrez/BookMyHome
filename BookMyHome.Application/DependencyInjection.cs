@@ -1,5 +1,6 @@
 ﻿using BookMyHome.Application.Interfaces.ServicesInterfaces;
-using BookMyHome.Application.Services;
+using BookMyHome.Application.Services.Bookings.Commands;
+using BookMyHome.Application.Services.Bookings.Queries;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
@@ -13,7 +14,8 @@ namespace BookMyHome.Application
 	{
 		public static IServiceCollection AddApplication(this IServiceCollection services)
 		{
-			services.AddScoped<IBookingService, BookingService>();
+			services.AddScoped<IBookingCommands, BookingCommandsService>();
+			services.AddScoped<IBookingQueries, BookingQueriesService>();
 			return services;
 		}
 	}

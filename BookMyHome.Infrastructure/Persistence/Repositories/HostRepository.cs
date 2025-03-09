@@ -1,13 +1,7 @@
 ﻿using BookMyHome.Core.Entities;
 using BookMyHome.Infrastructure.EntityFrameWork;
-using BookMyHome.Infrastructure.Persistence.Interfaces;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
+using BookMyHome.Application.Interfaces.ReposInterfaces;
 namespace BookMyHome.Infrastructure.Persistence.Repositories
 {
 	public class HostRepository : IHostRepository

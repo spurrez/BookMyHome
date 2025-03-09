@@ -1,7 +1,6 @@
 ﻿using BookMyHome.Application.Interfaces.ReposInterfaces;
 using BookMyHome.Core.Entities;
 using BookMyHome.Infrastructure.EntityFrameWork;
-using BookMyHome.Infrastructure.Persistence.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -14,20 +13,19 @@ namespace BookMyHome.Infrastructure.Persistence.Repositories
 {
 	public class BookingRepository : IBookingRepository
 	{
-		private readonly EntityFrameworkDBContext dbContext;
-        public BookingRepository(EntityFrameworkDBContext context)
-        {
-            dbContext = context;
-        }
-        public async Task<IEnumerable<Booking>?> GetAllBookings()
-        {
-            return await dbContext.Bookings.ToListAsync();
-        }
-
-		public async Task<Booking?> GetBookingById(Guid id)
+		private readonly EntityFrameworkDBContext _dbContext;
+		public BookingRepository(EntityFrameworkDBContext dbContext)
 		{
-			var booking = await dbContext.Bookings.FindAsync(id);
+			_dbContext = dbContext;
+		}
+		public async Task<IEnumerable<Booking>?> GetAllBookings()
+		{
+			return await _dbContext.Bookings.AsNoTracking().ToListAsync();
+		}
 
+		public async Task<Booking?> GetBookingById(int id)
+		{
+			var booking = await _dbContext.Bookings.FindAsync(id);
 			if (booking == null)
 			{
 				return null;
@@ -36,38 +34,52 @@ namespace BookMyHome.Infrastructure.Persistence.Repositories
 		}
 
 		public async Task<Booking> CreateBooking(Booking booking)
-        {
-            var createdBooking = await dbContext.Bookings.AddAsync(booking);
-            await dbContext.SaveChangesAsync();
-            return createdBooking.Entity;
-        }        
-        public async Task<Booking> UpdateBooking(Guid id, Booking booking)
-        {
-			var existingBooking = await dbContext.Bookings.FindAsync(id); // fix
-            if (existingBooking == null) 
-                return null;
-
-            //dbContext.Entry(existingBooking).CurrentValues.SetValues(booking); // not sure if this is optimal
-                                                                               // could just do this:
-            existingBooking.CheckIn = booking.CheckIn;
-            existingBooking.CheckOut = booking.CheckOut;
-
-            existingBooking.BookingId = id; // did this before in application layer (BookingService)
-
-			await dbContext.SaveChangesAsync();
-
-			return existingBooking;
+		{
+			var createdBooking = await _dbContext.Bookings.AddAsync(booking);
+			await _dbContext.SaveChangesAsync();
+			return createdBooking.Entity;
 		}
-        public async Task<bool> DeleteBooking(Guid id)
-        {
-            var booking = await dbContext.Bookings.FindAsync(id);
+		public async Task<Booking> UpdateBooking(int id, Booking booking)
+		{
+			var existingBooking = await _dbContext.Bookings.FindAsync(id);
+			if (existingBooking == null)
+				return null;
 
-            if(booking == null)
-                return false;
 
-            dbContext.Bookings.Remove(booking);
-            await dbContext.SaveChangesAsync();
-            return true;
-        }
-    }
+			// This sets the original value of the RowVersion to the value provided by the client.
+			// When SaveChanges is called, EF Core compares the original RowVersion with the current one in the database.
+			// If the RowVersion has changed (i.e., someone else modified the entity), a concurrency exception will be thrown/caught.
+			_dbContext.Entry(existingBooking).Property(b => b.RowVersion).OriginalValue = booking.RowVersion;
+
+			// change the updated values here
+			existingBooking.CheckIn = booking.CheckIn;
+			existingBooking.CheckOut = booking.CheckOut;
+
+			// not sure if this is optimal
+			// could just do this:
+			//dbContext.Entry(existingBooking).CurrentValues.SetValues(booking); 
+
+			try
+			{
+				await _dbContext.SaveChangesAsync();
+				return existingBooking;
+
+			}
+			catch (DbUpdateConcurrencyException)
+			{
+				throw new InvalidOperationException("The booking was modified by another user.");
+			}
+		}
+		public async Task<bool> DeleteBooking(int id)
+		{
+			var booking = await _dbContext.Bookings.FindAsync(id);
+
+			if (booking == null)
+				return false;
+
+			_dbContext.Bookings.Remove(booking);
+			await _dbContext.SaveChangesAsync();
+			return true;
+		}
+	}
 }

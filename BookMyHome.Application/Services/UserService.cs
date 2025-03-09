@@ -8,8 +8,8 @@ using System.Threading.Tasks;
 
 namespace BookMyHome.Application.Services
 {
-	public class UserService
-	{
-		//private readonly IRepository<User>
-	}
+    public class UserService
+    {
+        //private readonly IRepository<User>
+    }
 }

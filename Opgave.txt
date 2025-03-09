@@ -73,4 +73,4 @@ Non-Functional Requirements:
         Ved opret og ret skal det tjekkes at der ikke opstår overlappende bookings. Sker det skal der kastes en Custom exception - "OverlapingBookingException"
 
 
-
+seperate controllers to each query and command or just still use one?

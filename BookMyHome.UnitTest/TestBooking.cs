@@ -1,59 +1,50 @@
 ﻿using BookMyHome.Application.Interfaces.ReposInterfaces;
-using BookMyHome.Application.Interfaces.ServicesInterfaces;
-using BookMyHome.Application.Services;
+using BookMyHome.Application.Services.Bookings.Commands;
 using BookMyHome.Core.CustomException;
 using BookMyHome.Core.Entities;
 using Moq;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace BookMyHome.UnitTest
 {
 	public class TestBooking
 	{
-		//private readonly Mock<IBookingRepository> mockBookingRepository;
-		//private readonly BookingService _bookingService;
-
-		public TestBooking()
+		[Theory]
+		[InlineData(1, 5, 2, 3)] // Overlap in the middle
+		[InlineData(1, 3, 2, 4)] // Overlap at the end
+		[InlineData(2, 6, 1, 3)] // Overlap at the start
+		[InlineData(1, 10, 1, 10)] // Exact match
+		[InlineData(3, 5, 1, 6)] // Completely contained within
+		public async Task TestBookingThatOverlaps(int checkInDays, int checkOutDays, int existingCheckIn, int existingCheckOut)
 		{
 			// Arrange 
 			var mockBookingRepository = new Mock<IBookingRepository>();
-			var bookingService = new BookingService(mockBookingRepository.Object);
+			var bookingService = new BookingCommandsService(mockBookingRepository.Object);
 
-		}
-		[Fact]
-		public async Task TestBookingThatOverlaps()
-		{
-			// Arrange 
-			var mockBookingRepository = new Mock<IBookingRepository>();
-			var bookingService = new BookingService(mockBookingRepository.Object);
-
-			var newBooking = new Booking(DateTime.Now.AddDays(1).Date, DateTime.Now.AddDays(5).Date); // this goes from day 1 to day 5
+			var newBooking = new Booking(DateTime.Now.AddDays(checkInDays).Date, DateTime.Now.AddDays(checkOutDays).Date); // this goes from day 1 to day 5
 			var existingBookings = new List<Booking>
 			{
-				new Booking(DateTime.Now.AddDays(2).Date, DateTime.Now.AddDays(3).Date) // this goes from day 2 to day 3, so there will be a conflict
+				new Booking(DateTime.Now.AddDays(existingCheckIn).Date, DateTime.Now.AddDays(existingCheckOut).Date) // this goes from day 2 to day 3, so there will be a conflict
 			};
 			mockBookingRepository.Setup(r => r.GetAllBookings()).ReturnsAsync(existingBookings); // mock setup. my GetAllBookings returns the list above
-			// Act and Assert
 			await Assert.ThrowsAsync<OverlappingBookingException>(() => bookingService.CreateBooking(newBooking));
 		}
 
-		[Fact]
-		public async Task TestBookingInThePast()
+		[Theory]
+		[InlineData(-10, -5)] // Fully in the past
+		[InlineData(-1, 2)]   // Starts in the past, ends in the future
+		public void TestBookingInThePast(int checkInDays, int checkOutDays)
 		{
 			// Act & Assert
-			var exception = Assert.Throws<Exception>(() => new Booking(DateTime.Now.AddDays(-10), DateTime.Now.AddDays(-5)));
-
+			var exception = Assert.Throws<Exception>(() => new Booking(DateTime.Now.AddDays(checkInDays).Date, DateTime.Now.AddDays(checkOutDays).Date));
 			Assert.Equal("Cannot book in the past", exception.Message);
 		}
 
-		[Fact]
-		public async Task TestBookingCheckInHasTobeBeforeCheckOut()
+		[Theory]
+		[InlineData(5, 3)]
+		[InlineData(0, 0)]
+		public void TestBookingCheckInHasTobeBeforeCheckOut(int checkInDays, int checkOutDays)
 		{
-			var exception = Assert.Throws<Exception>(() => new Booking(DateTime.Now.AddDays(5), DateTime.Now.AddDays(3)));
+			var exception = Assert.Throws<Exception>(() => new Booking(DateTime.Now.AddDays(checkInDays).Date, DateTime.Now.AddDays(checkOutDays).Date));
 
 			Assert.Equal("Check out date has to be on a later date than check in", exception.Message);
 

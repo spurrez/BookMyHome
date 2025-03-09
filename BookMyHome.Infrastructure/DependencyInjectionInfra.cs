@@ -1,5 +1,4 @@
 ﻿using BookMyHome.Application.Interfaces.ReposInterfaces;
-using BookMyHome.Infrastructure.Persistence.Interfaces;
 using BookMyHome.Infrastructure.Persistence.Repositories;
 using Microsoft.Extensions.DependencyInjection;
 using System;

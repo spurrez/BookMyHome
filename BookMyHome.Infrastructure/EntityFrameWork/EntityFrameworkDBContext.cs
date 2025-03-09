@@ -1,5 +1,6 @@
 ﻿using BookMyHome.Core.Entities;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,18 +17,20 @@ namespace BookMyHome.Infrastructure.EntityFrameWork
 			: base(options)
 		{
 		}
-		public DbSet<Host> Hosts { get; set; }
+        public EntityFrameworkDBContext()
+        {
+            
+        }
+        public DbSet<Host> Hosts { get; set; }
 		public DbSet<Booking> Bookings { get; set; }
-
 		protected override void OnModelCreating(ModelBuilder modelBuilder)
 		{
-			//modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
-
 			modelBuilder.Entity<Booking>()
-			.HasData(
-				new Booking(new DateTime(2025, 04, 30), new DateTime(2025, 05, 3)) { BookingId = Guid.Parse("11111111-1111-1111-1111-111111111111") },
-				new Booking(new DateTime(2025, 06, 20), new DateTime(2025, 07, 2)) { BookingId = Guid.Parse("22222222-2222-2222-2222-222222222222") }
-			);
+				.HasData(
+					new Booking(new DateTime(2025, 04, 30), new DateTime(2025, 05, 3)) { BookingId = 1},
+					new Booking(new DateTime(2025, 06, 20), new DateTime(2025, 07, 2)) { BookingId = 2}
+				);
 		}
+
 	}
 }
