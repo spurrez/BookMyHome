@@ -1,7 +1,7 @@
 ﻿using BookMyHome.Application.Interfaces;
 using BookMyHome.Application.Interfaces.ReposInterfaces;
-using BookMyHome.Application.Interfaces.ServicesInterfaces;
-using BookMyHome.Core.Entities;
+using BookMyHome.Application.Services.BookingService.Interfaces;
+using BookMyHome.Domain.Entities;
 using BookMyHome.Infrastructure.Persistence.Repositories;
 using Microsoft.AspNetCore.Mvc;
 using System.Runtime.InteropServices;

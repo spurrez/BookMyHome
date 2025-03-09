@@ -1,7 +1,7 @@
 ﻿using BookMyHome.Application.Interfaces.ReposInterfaces;
-using BookMyHome.Application.Services.Bookings.Commands;
-using BookMyHome.Core.CustomException;
-using BookMyHome.Core.Entities;
+using BookMyHome.Application.Services.BookingService.Commands;
+using BookMyHome.Domain.CustomException;
+using BookMyHome.Domain.Entities;
 using Moq;
 
 namespace BookMyHome.UnitTest

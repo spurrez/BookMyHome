@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace BookMyHome.Core.CustomException
+namespace BookMyHome.Domain.CustomException
 {
 	public class OverlappingBookingException : Exception
 	{

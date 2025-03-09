@@ -1,4 +1,4 @@
-﻿using BookMyHome.Core.Entities;
+﻿using BookMyHome.Domain.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,10 +9,10 @@ namespace BookMyHome.Application.Interfaces.ReposInterfaces
 {
 	public interface IHostRepository
 	{
-		Task<IEnumerable<Host?>> GetAll();
-		Task<Host?> GetUserById(int id);
-		Task<Host> Add(Host entity);
-		Task<Host> Update(Host entity);
-		Task<bool> Delete(int id);
+		Task<IEnumerable<Host>?> GetAllHosts();
+		Task<Host?> GetHostById(int id);
+		Task<Host> CreateHost(Host host);
+		Task<Host> UpdateHost(int id, Host host);
+		Task<bool> DeleteHost(int id);
 	}
 }

@@ -1,4 +1,4 @@
-﻿using BookMyHome.Core.Entities;
+﻿using BookMyHome.Domain.Entities;
 using BookMyHome.Infrastructure.EntityFrameWork;
 using Microsoft.EntityFrameworkCore;
 using BookMyHome.Application.Interfaces.ReposInterfaces;
@@ -6,46 +6,61 @@ namespace BookMyHome.Infrastructure.Persistence.Repositories
 {
 	public class HostRepository : IHostRepository
 	{
-		private readonly EntityFrameworkDBContext context;
+		private readonly EntityFrameworkDBContext _dbContext;
 
 		public HostRepository(EntityFrameworkDBContext context)
 		{
-			this.context = context;
+			_dbContext = context;
 		}
 
-		public async Task<IEnumerable<Host?>> GetAll()
+		public async Task<IEnumerable<Host?>> GetAllHosts()
 		{
-			return await context.Hosts.ToListAsync();
+			return await _dbContext.Hosts.AsNoTracking().ToListAsync();
 		}
 
-		public async Task<Host?> GetUserById(int id)
+		public async Task<Host?> GetHostById(int id)
 		{
-			return await context.Hosts.FindAsync(id);
-		}
-
-		public async Task<Host> Add(Host entity)
-		{
-			await context.Hosts.AddAsync(entity);  
-			await context.SaveChangesAsync();      
-			return entity;
-		}
-
-		public async Task<Host> Update(Host entity)
-		{
-			context.Hosts.Update(entity);          
-			await context.SaveChangesAsync();      
-			return entity;
-		}
-
-		public async Task<bool> Delete(int id)
-		{
-			var host = await context.Hosts.FindAsync(id);
+			var host = await _dbContext.Hosts.FindAsync(id);
 			if (host == null)
-				return false;  
+				return null;
+			return host;
+		}
 
-			context.Hosts.Remove(host);     
-			await context.SaveChangesAsync(); 
-			return true; 
+		public async Task<Host> CreateHost(Host entity)
+		{
+			var createdHost = await _dbContext.Hosts.AddAsync(entity);
+			await _dbContext.SaveChangesAsync();
+			return createdHost.Entity;
+		}
+
+		public async Task<Host> UpdateHost(int id, Host host)
+		{
+			var existingHost = await _dbContext.Hosts.FindAsync(id);
+			if (existingHost == null)
+				return null;
+
+			_dbContext.Entry(existingHost).Property(b => b.RowVersion).OriginalValue = host.RowVersion;
+			_dbContext.Hosts.Update(host); // fix probably
+
+			try
+			{
+				await _dbContext.SaveChangesAsync();
+				return host;
+			}
+			catch (DbUpdateConcurrencyException)
+			{
+				throw new InvalidOperationException("The host was modified by another user");
+			}
+		}
+		public async Task<bool> DeleteHost(int id)
+		{
+			var host = await _dbContext.Hosts.FindAsync(id);
+			if (host == null)
+				return false;
+
+			_dbContext.Hosts.Remove(host);
+			await _dbContext.SaveChangesAsync();
+			return true;
 		}
 	}
 

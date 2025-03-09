@@ -11,58 +11,53 @@ using static System.Net.Mime.MediaTypeNames;
 
 namespace BookMyHome.Infrastructure.Persistence.Repositories
 {
-	public class BookingRepository : IBookingRepository
+	public class GuestRepository : IGuestRepository
 	{
 		private readonly EntityFrameworkDBContext _dbContext;
-		public BookingRepository(EntityFrameworkDBContext dbContext)
+		public GuestRepository(EntityFrameworkDBContext dbContext)
 		{
 			_dbContext = dbContext;
 		}
-		public async Task<IEnumerable<Booking>?> GetAllBookings()
+		public async Task<IEnumerable<Guest>?> GetAllGuests()
 		{
-			return await _dbContext.Bookings.AsNoTracking().ToListAsync();
+			return await _dbContext.Guests.AsNoTracking().ToListAsync();
 		}
 
-		public async Task<Booking?> GetBookingById(int id)
+		public async Task<Guest?> GetGuestById(int id)
 		{
-			var booking = await _dbContext.Bookings.FindAsync(id);
-			if (booking == null)
+			var guest = await _dbContext.Guests.FindAsync(id);
+			if (guest == null)
 			{
 				return null;
 			}
-			return booking;
+			return guest;
 		}
 
-		public async Task<Booking> CreateBooking(Booking booking)
+		public async Task<Guest> CreateGuest(Guest guest)
 		{
-			var createdBooking = await _dbContext.Bookings.AddAsync(booking);
+			var createdGuest = await _dbContext.Guests.AddAsync(guest);
 			await _dbContext.SaveChangesAsync();
-			return createdBooking.Entity;
+			return createdGuest.Entity;
 		}
-		public async Task<Booking> UpdateBooking(int id, Booking booking)
+		public async Task<Guest> UpdateGuest(int id, Guest guest)
 		{
-			var existingBooking = await _dbContext.Bookings.FindAsync(id);
-			if (existingBooking == null)
+			var existingGuest = await _dbContext.Guests.FindAsync(id);
+			if (existingGuest == null)
 				return null;
 
 
 			// This sets the original value of the RowVersion to the value provided by the client.
 			// When SaveChanges is called, EF Core compares the original RowVersion with the current one in the database.
 			// If the RowVersion has changed (i.e., someone else modified the entity), a concurrency exception will be thrown/caught.
-			_dbContext.Entry(existingBooking).Property(b => b.RowVersion).OriginalValue = booking.RowVersion;
+			_dbContext.Entry(existingGuest).Property(b => b.RowVersion).OriginalValue = guest.RowVersion;
 
 			// change the updated values here
-			existingBooking.CheckIn = booking.CheckIn;
-			existingBooking.CheckOut = booking.CheckOut;
-
-			// not sure if this is optimal
-			// could just do this:
-			//dbContext.Entry(existingBooking).CurrentValues.SetValues(booking); 
+			_dbContext.Update(existingGuest);
 
 			try
 			{
 				await _dbContext.SaveChangesAsync();
-				return existingBooking;
+				return existingGuest;
 
 			}
 			catch (DbUpdateConcurrencyException)
@@ -70,14 +65,14 @@ namespace BookMyHome.Infrastructure.Persistence.Repositories
 				throw new InvalidOperationException("The booking was modified by another user.");
 			}
 		}
-		public async Task<bool> DeleteBooking(int id)
+		public async Task<bool> DeleteGuest(int id)
 		{
-			var booking = await _dbContext.Bookings.FindAsync(id);
+			var guest = await _dbContext.Guests.FindAsync(id);
 
-			if (booking == null)
+			if (guest == null)
 				return false;
 
-			_dbContext.Bookings.Remove(booking);
+			_dbContext.Guests.Remove(guest);
 			await _dbContext.SaveChangesAsync();
 			return true;
 		}

@@ -5,16 +5,24 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace BookMyHome.Core.Entities
+namespace BookMyHome.Domain.Entities
 {
-	public abstract class User
-	{
+    public abstract class User
+    {
         [Key]
         public int Id { get; set; }
-        public string FirstName { get; set; }
-        public string LastName { get; set; }
-        public string Email { get; set; }
-        public string Password { get; set; }
-        public string Phone { get; set; }
-    }
+        [Required, StringLength(25)]
+
+        public string? FirstName { get; set; }
+        [Required, StringLength(25)]
+        public string? LastName { get; set; }
+        [Required, EmailAddress]
+        public string? Email { get; set; }
+        [Required, StringLength(100, MinimumLength = 6)]
+        public string? Password { get; set; }
+        [Required]// maybe max and min and only dash and numbers]
+        public string? Phone { get; set; }
+		[Timestamp]
+		public byte[]? RowVersion { get; set; }
+	}
 }

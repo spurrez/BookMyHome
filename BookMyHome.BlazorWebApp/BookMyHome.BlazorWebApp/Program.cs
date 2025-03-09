@@ -31,6 +31,19 @@ namespace BookMyHome.BlazorWebApp.Server
 
 			var app = builder.Build();
 
+
+
+			// Seed the database using shitty test data
+			using (var scope = app.Services.CreateScope())
+			{
+				var services = scope.ServiceProvider;
+				var context = services.GetRequiredService<EntityFrameworkDBContext>();
+
+				// Initialize the seed data
+				SeedData.InitializeSeedData(services, context);
+			}
+
+
 			// Configure the HTTP request pipeline.
 			if (app.Environment.IsDevelopment())
 			{

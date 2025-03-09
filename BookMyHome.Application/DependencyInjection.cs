@@ -1,6 +1,6 @@
-﻿using BookMyHome.Application.Interfaces.ServicesInterfaces;
-using BookMyHome.Application.Services.Bookings.Commands;
-using BookMyHome.Application.Services.Bookings.Queries;
+﻿using BookMyHome.Application.Services.BookingService.Commands;
+using BookMyHome.Application.Services.BookingService.Interfaces;
+using BookMyHome.Application.Services.BookingService.Queries;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;

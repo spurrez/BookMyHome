@@ -1,4 +1,5 @@
-﻿using System;
+﻿using BookMyHome.Domain.Entities;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -7,15 +8,27 @@ using System.Text;
 using System.Threading.Channels;
 using System.Threading.Tasks;
 
-namespace BookMyHome.Core.Entities
+namespace BookMyHome.Domain.Entities
 {
 	public class Booking
 	{
 		[Key]
 		[DatabaseGenerated(DatabaseGeneratedOption.Identity)]
 		public int BookingId { get; set; }
+		[Required]
 		public DateTime CheckIn { get; set; }
+		[Required]
 		public DateTime CheckOut { get; set; }
+
+        // Foreign key: A Booking is associated with one Accommodation
+        public int AccommodationId { get; set; }
+		public virtual Accommodation Accommodation { get; set; }
+
+		// Foreign key: A Booking is made by one Guest
+		public int GuestId { get; set; }
+		public virtual Guest Guest { get; set; }
+
+
         [Timestamp]
         public byte[]? RowVersion { get; set; }
 

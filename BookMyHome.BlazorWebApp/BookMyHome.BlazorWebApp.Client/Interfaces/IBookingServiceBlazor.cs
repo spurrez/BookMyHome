@@ -1,4 +1,4 @@
-﻿using BookMyHome.Core.Entities;
+﻿using BookMyHome.Domain.Entities;
 
 namespace BookMyHome.BlazorWebApp.Client.Interfaces
 {

@@ -1,13 +1,13 @@
 ﻿using BookMyHome.Application.Interfaces.ReposInterfaces;
-using BookMyHome.Application.Interfaces.ServicesInterfaces;
-using BookMyHome.Core.Entities;
+using BookMyHome.Application.Services.BookingService.Interfaces;
+using BookMyHome.Domain.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace BookMyHome.Application.Services.Bookings.Queries
+namespace BookMyHome.Application.Services.BookingService.Queries
 {
     public class BookingQueriesService : IBookingQueries
     {

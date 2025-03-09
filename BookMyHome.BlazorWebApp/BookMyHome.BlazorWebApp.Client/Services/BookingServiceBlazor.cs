@@ -1,4 +1,4 @@
-﻿using BookMyHome.Core.Entities;
+﻿using BookMyHome.Domain.Entities;
 using System;
 using System.Collections;
 using System.Collections.Generic;
