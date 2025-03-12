@@ -14,6 +14,9 @@ namespace BookMyHome.Infrastructure
 		public static IServiceCollection AddInfrastructure(this IServiceCollection services)
 		{
 			services.AddScoped<IBookingRepository, BookingRepository>();
+			services.AddScoped<IHostRepository, HostRepository>();
+			services.AddScoped<IAccommodationRepository, AccommodationRepository>();
+			services.AddScoped<IGuestRepository, GuestRepository>();
 
 			return services;
 		}

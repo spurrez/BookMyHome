@@ -1,4 +1,7 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using BookMyHome.Application.Services.AccommodationService.Interfaces;
+using BookMyHome.Application.Services.BookingService.Interfaces;
+using BookMyHome.Domain.Entities;
+using Microsoft.AspNetCore.Mvc;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -8,36 +11,57 @@ namespace BookMyHome.BlazorWebApp.Server.ApiController
 	[ApiController]
 	public class AccommodationController : ControllerBase
 	{
-		// GET: api/<HostController>
-		[HttpGet]
-		public IEnumerable<string> Get()
+		private readonly IAccommodationQueries _accommodationQueries;
+		private readonly IAccommodationCommands _accommodationCommands;
+        public AccommodationController(IAccommodationQueries accommodationQueries, IAccommodationCommands accommodationCommands)
+        {
+			_accommodationQueries = accommodationQueries;
+            _accommodationCommands = accommodationCommands;
+        }
+
+        [HttpGet]
+		public async Task<IActionResult> Get()
 		{
-			return new string[] { "value1", "value2" };
+			var accommodations = await _accommodationQueries.GetAllAccommodation();
+			if(accommodations == null || !accommodations.Any()) 
+				return NotFound("Accommodations are empty");
+			return Ok(accommodations);
 		}
 
-		// GET api/<HostController>/5
 		[HttpGet("{id}")]
-		public string Get(int id)
+		public async Task<IActionResult> Get(int id)
 		{
-			return "value";
+			var accommodations = await _accommodationQueries.GetAccommodationById(id);
+			if (accommodations == null)
+				return NotFound("Did not find the accommodation");
+			return Ok(accommodations);
 		}
 
-		// POST api/<HostController>
 		[HttpPost]
-		public void Post([FromBody] string value)
+		public async Task<IActionResult> Post(Accommodation accommodation)
 		{
+			var createdAccommodations = await _accommodationCommands.CreateAccommodation(accommodation);
+			if (createdAccommodations == null)
+				return NotFound("Failed to create");
+			return Ok(createdAccommodations);
 		}
 
-		// PUT api/<HostController>/5
 		[HttpPut("{id}")]
-		public void Put(int id, [FromBody] string value)
+		public async Task<IActionResult> Put(int id, Accommodation accommodation)
 		{
+			var updatedBooking = await _accommodationCommands.UpdateAccommodation(id, accommodation);
+			if (updatedBooking == null)
+				return NotFound("Failed to update");
+			return Ok(updatedBooking);
 		}
 
-		// DELETE api/<HostController>/5
 		[HttpDelete("{id}")]
-		public void Delete(int id)
+		public async Task<IActionResult> Delete(int id)
 		{
+			bool deletedAccommodation = await _accommodationCommands.DeleteAccommodation(id);
+			if (!deletedAccommodation)
+				return NotFound("Failed to delete");
+			return NoContent();
 		}
 	}
 }

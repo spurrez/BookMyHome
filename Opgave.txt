@@ -73,4 +73,7 @@ Non-Functional Requirements:
         Ved opret og ret skal det tjekkes at der ikke opstår overlappende bookings. Sker det skal der kastes en Custom exception - "OverlapingBookingException"
 
 
-seperate controllers to each query and command or just still use one?
+
+how do the rendermodes function? do i make the client pages do renderserver?
+is how it is set up now a connected state? since i use dependency injection in my dbcontext repository?
+

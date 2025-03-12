@@ -1,43 +1,68 @@
-﻿//using Microsoft.AspNetCore.Mvc;
+﻿using BookMyHome.Application.Services.AccommodationService.Interfaces;
+using BookMyHome.Application.Services.BookingService.Interfaces;
+using BookMyHome.Application.Services.GuestService.Interfaces;
+using BookMyHome.Domain.Entities;
+using Microsoft.AspNetCore.Mvc;
 
-//// For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+// For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
-//namespace BookMyHome.BlazorWebApp.Server.ApiController
-//{
-//	[Route("api/[controller]")]
-//	[ApiController]
-//	public class GuestController : ControllerBase
-//	{
-//		// GET: api/<HostController>
-//		[HttpGet]
-//		public IEnumerable<string> Get()
-//		{
-//			return new string[] { "value1", "value2" };
-//		}
+namespace BookMyHome.BlazorWebApp.Server.ApiController
+{
+	[Route("api/[controller]")]
+	[ApiController]
+	public class GuestController : ControllerBase
+	{
+		private readonly IGuestQueries _guestQueries;
+		private readonly IGuestCommands _guestCommands;
+        public GuestController(IGuestQueries guestQueries, IGuestCommands guestCommands)
+        {
+            _guestQueries = guestQueries;
+			_guestCommands = guestCommands;
+        }
 
-//		// GET api/<HostController>/5
-//		[HttpGet("{id}")]
-//		public string Get(int id)
-//		{
-//			return "value";
-//		}
+        [HttpGet]
+		public async Task<IActionResult> Get()
+		{
+			var guests = await _guestQueries.GetAllGuests();
+			if (guests == null || !guests.Any())
+				return NotFound("Guests are empty");
+			return Ok(guests);
+		}
 
-//		// POST api/<HostController>
-//		[HttpPost]
-//		public void Post([FromBody] string value)
-//		{
-//		}
+		[HttpGet("{id}")]
+		public async Task<IActionResult> Get(int id)
+		{
+			var accommodations = await _guestQueries.GetGuestById(id);
+			if (accommodations == null)
+				return NotFound("Did not find the accommodation");
+			return Ok(accommodations);
+		}
 
-//		// PUT api/<HostController>/5
-//		[HttpPut("{id}")]
-//		public void Put(int id, [FromBody] string value)
-//		{
-//		}
+		[HttpPost]
+		public async Task<IActionResult> Post(Guest guest)
+		{
+			var createdGuest = await _guestCommands.CreateGuest(guest);
+			if (createdGuest == null)
+				return NotFound("Failed to create");
+			return Ok(createdGuest);
+		}
 
-//		// DELETE api/<HostController>/5
-//		[HttpDelete("{id}")]
-//		public void Delete(int id)
-//		{
-//		}
-//	}
-//}
+		[HttpPut("{id}")]
+		public async Task<IActionResult> Put(int id, Guest guest)
+		{
+			var updatedGuest = await _guestCommands.UpdateGuest(id, guest);
+			if (updatedGuest == null)
+				return NotFound("Failed to update");
+			return Ok(updatedGuest);
+		}
+
+		[HttpDelete("{id}")]
+		public async Task<IActionResult> Delete(int id)
+		{
+			bool deletedGuest = await _guestCommands.DeleteGuest(id);
+			if (!deletedGuest)
+				return NotFound("Failed to delete");
+			return NoContent();
+		}
+	}
+}

@@ -8,7 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using BookMyHome.BlazorWebApp.Client.Interfaces;
 
-namespace BookMyHome.Application.Services
+namespace BookMyHome.BlazorWebApp.Client.Services
 {
 	public class BookingServiceBlazor : IBookingServiceBlazor
 	{
@@ -42,7 +42,7 @@ namespace BookMyHome.Application.Services
 
 		public async Task<Booking> UpdateBooking(Guid id, Booking booking)
 		{
-			var response = await httpClient.PutAsJsonAsync<Booking>($"api/booking/{id}", booking);
+			var response = await httpClient.PutAsJsonAsync($"api/booking/{id}", booking);
 			response.EnsureSuccessStatusCode();
 			var updatedBooking = await response.Content.ReadFromJsonAsync<Booking>();
 			return updatedBooking;
