@@ -25,8 +25,8 @@ namespace BookMyHome.Domain.Entities
 		public virtual Accommodation Accommodation { get; set; }
 
 		// Foreign key: A Booking is made by one Guest
-		public int GuestId { get; set; }
-		public virtual Guest Guest { get; set; }
+		public int? GuestId { get; set; }
+		public virtual Guest? Guest { get; set; }
 
 
         [Timestamp]

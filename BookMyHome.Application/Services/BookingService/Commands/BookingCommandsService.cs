@@ -1,4 +1,5 @@
 ﻿using BookMyHome.Application.Interfaces.ReposInterfaces;
+using BookMyHome.Application.Interfaces.UnitOfWork;
 using BookMyHome.Application.Services.BookingService.Interfaces;
 using BookMyHome.Domain.CustomException;
 using BookMyHome.Domain.Entities;
@@ -13,33 +14,71 @@ namespace BookMyHome.Application.Services.BookingService.Commands
     public class BookingCommandsService : IBookingCommands
     {
 
-        private readonly IBookingRepository _bookingRepository;
-
-        public BookingCommandsService(IBookingRepository bookingRepository)
+        private readonly IUnitOfWork _unitOfWork;
+        public BookingCommandsService(IUnitOfWork unitOfWork)
         {
-            _bookingRepository = bookingRepository;
+            _unitOfWork = unitOfWork;
         }
 
         public async Task<Booking> CreateBooking(Booking booking)
         {
-            var existingBookings = await _bookingRepository.GetAllBookings();
-            if (booking.IsOverLapping(existingBookings))
-                throw new OverlappingBookingException(); // refactor
+            await _unitOfWork.BeginTransactionAsync();
+            try
+            {
+                var existingBookings = await _unitOfWork.BookingRepository.GetAllBookings();
 
-            return await _bookingRepository.CreateBooking(booking);
+                if (booking.IsOverLapping(existingBookings))
+                    throw new OverlappingBookingException();
+
+                Booking newBooking = await _unitOfWork.BookingRepository.CreateBooking(booking);
+                await _unitOfWork.CommitTransactionAsync();
+                return newBooking;
+            }
+            catch
+            {
+                await _unitOfWork.RollbackTransactionAsync();
+                Console.WriteLine("Rollback called");
+                throw;
+            }
         }
 
         public async Task<Booking> UpdateBooking(int id, Booking booking)
         {
-            var existingBookings = await _bookingRepository.GetAllBookings();
-            if (booking.IsOverLapping(existingBookings))
-                throw new OverlappingBookingException();
-            return await _bookingRepository.UpdateBooking(id, booking);
+            await _unitOfWork.BeginTransactionAsync();
+            try
+            {
+                var existingBookings = await _unitOfWork.BookingRepository.GetAllBookings();
+
+                if (booking.IsOverLapping(existingBookings))
+                    throw new OverlappingBookingException();
+
+                Booking updatedBooking = await _unitOfWork.BookingRepository.UpdateBooking(id, booking);
+                await _unitOfWork.CommitTransactionAsync();
+                return updatedBooking;
+
+            }
+            catch
+            {
+                await _unitOfWork.RollbackTransactionAsync();
+                Console.WriteLine("Rollback called");
+                throw;
+            }
         }
 
         public async Task<bool> DeleteBooking(int id)
         {
-            return await _bookingRepository.DeleteBooking(id);
+            await _unitOfWork.BeginTransactionAsync();
+            try
+            {
+                var isDeleted = await _unitOfWork.BookingRepository.DeleteBooking(id);
+                await _unitOfWork.CommitTransactionAsync();
+                return isDeleted;
+            }
+            catch
+            {
+                await _unitOfWork.RollbackTransactionAsync();
+                throw;
+            }
         }
     }
 }

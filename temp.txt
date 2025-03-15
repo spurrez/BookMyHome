@@ -1,0 +1,67 @@
+[Theory]
+[InlineData(1, 5, 2, 3)] // Overlap in the middle
+[InlineData(1, 3, 2, 4)] // Overlap at the end
+[InlineData(2, 6, 1, 3)] // Overlap at the start
+[InlineData(1, 10, 1, 10)] // Exact match
+[InlineData(3, 5, 1, 6)] // Completely contained within
+public async Task TestBookingThatOverlaps(int checkInDays, int checkOutDays, int existingCheckIn, int existingCheckOut)
+{
+    // Arrange 
+    var mockBookingRepository = new Mock<IBookingRepository>();
+    var mockUnitOfWork = new Mock<IUnitOfWork>();
+
+    // Create the booking service with the mocked repository and unit of work
+    var bookingService = new BookingCommandsService(mockBookingRepository.Object, mockUnitOfWork.Object);
+
+    // Create a new booking based on the test parameters
+    var newBooking = new Booking(DateTime.Now.AddDays(checkInDays).Date, DateTime.Now.AddDays(checkOutDays).Date);
+    
+    // Create an existing booking to simulate overlap
+    var existingBookings = new List<Booking>
+    {
+        new Booking(DateTime.Now.AddDays(existingCheckIn).Date, DateTime.Now.AddDays(existingCheckOut).Date)
+    };
+
+    // Mock the repository's GetAllBookings to return the existing bookings
+    mockBookingRepository.Setup(r => r.GetAllBookings()).ReturnsAsync(existingBookings);
+
+    // Act & Assert: Ensure that the OverlappingBookingException is thrown when attempting to create a booking
+    await Assert.ThrowsAsync<OverlappingBookingException>(() => bookingService.CreateBooking(newBooking));
+
+    // Verify that the BeginTransactionAsync was called (if applicable)
+    mockUnitOfWork.Verify(u => u.BeginTransactionAsync(), Times.Once);
+
+    // Verify that CommitTransactionAsync and RollbackTransactionAsync are NOT called
+    // because the transaction should be rolled back due to the exception
+    mockUnitOfWork.Verify(u => u.CommitTransactionAsync(), Times.Never);
+    mockUnitOfWork.Verify(u => u.RollbackTransactionAsync(), Times.Once);
+}
+
+
+
+
+
+FOR POSTMAN CREATE BOOKING
+{
+    "checkIn": "2025-07-20T00:00:00",
+    "checkOut": "2025-07-25T00:00:00",
+    "accommodation": {
+        "accommodationId": 3,
+        "title": "Ocean View Villa",
+        "description": "A beautiful villa with an ocean view.",
+        "address": "123 Ocean Drive, Beach Town",
+        "pricePerNight": 150.00,
+        "hostId": 1,
+        "owner": {
+            "id": 1,
+            "firstName": "John",
+            "lastName": "Doe",
+            "email": "john.doe@example.com",
+            "password": "Host123!",
+            "phone": "1234567890",
+            "rowVersion": "AAAAAAAAB+E="
+        },
+        "rowVersion": "AAAAAAAAB+U="
+    },
+    "guestId": 1
+}

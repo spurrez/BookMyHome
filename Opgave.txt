@@ -74,6 +74,6 @@ Non-Functional Requirements:
 
 
 
-how do the rendermodes function? do i make the client pages do renderserver?
-is how it is set up now a connected state? since i use dependency injection in my dbcontext repository?
 
+
+is how it is set up now a connected state? since i use dependency injection in my dbcontext repository?

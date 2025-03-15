@@ -16,5 +16,7 @@ namespace BookMyHome.Application.Interfaces.ReposInterfaces
 		Task<Booking> UpdateBooking(int id, Booking booking);
 		Task<bool> DeleteBooking(int id);
 
-	}
+		Task<Booking?> GetBookingByIdNoInclude(int id);
+
+    }
 }

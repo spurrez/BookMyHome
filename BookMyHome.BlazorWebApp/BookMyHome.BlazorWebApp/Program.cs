@@ -15,6 +15,7 @@ namespace BookMyHome.BlazorWebApp.Server
 
 			builder.Services.AddInfrastructure();
 			builder.Services.AddApplication();
+
 			builder.Services.AddDbContext<EntityFrameworkDBContext>(options =>
 			options.UseSqlServer(
 				builder.Configuration.GetConnectionString("DefaultConnection"),

@@ -22,11 +22,9 @@ namespace BookMyHome.Domain.Entities
 		public decimal PricePerNight { get; set; }
 
         // Foreign key: An Accommodation belongs to one Host
-        public int HostId { get; set; }
-		public virtual Host Owner { get; set; }
+        public int? HostId { get; set; }
+		public virtual Host? Owner { get; set; }
 
-		// Navigation property: An Accommodation can have many Bookings
-        public virtual ICollection<Booking> Bookings { get; set; } = new List<Booking>();
 		[Timestamp]
 		public byte[]? RowVersion { get; set; }
 	}

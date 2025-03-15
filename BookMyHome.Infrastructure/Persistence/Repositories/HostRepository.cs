@@ -62,6 +62,16 @@ namespace BookMyHome.Infrastructure.Persistence.Repositories
 			await _dbContext.SaveChangesAsync();
 			return true;
 		}
-	}
+
+		public async Task<Host?> GetHostByEmail(string email)
+		{
+			return await _dbContext.Hosts.FirstOrDefaultAsync(h => h.Email == email);
+		}
+        //public async Task<IEnumerable<Host>> GetTopRatedHosts()
+        //{
+        //    return await _dbContext.Hosts.Where(h => h.Rating >= 4.5).ToListAsync();
+        //}
+
+    }
 
 }

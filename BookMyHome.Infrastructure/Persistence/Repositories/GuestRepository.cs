@@ -50,9 +50,7 @@ namespace BookMyHome.Infrastructure.Persistence.Repositories
 			// When SaveChanges is called, EF Core compares the original RowVersion with the current one in the database.
 			// If the RowVersion has changed (i.e., someone else modified the entity), a concurrency exception will be thrown/caught.
 			_dbContext.Entry(existingGuest).Property(b => b.RowVersion).OriginalValue = guest.RowVersion;
-
-			// change the updated values here
-			_dbContext.Update(existingGuest);
+			_dbContext.Entry(existingGuest).CurrentValues.SetValues(guest);
 
 			try
 			{
@@ -76,5 +74,14 @@ namespace BookMyHome.Infrastructure.Persistence.Repositories
 			await _dbContext.SaveChangesAsync();
 			return true;
 		}
-	}
+
+		// the below might have to do in booking instead of guest repo
+        //public async Task<IEnumerable<Guest>> GetGuestsWithActiveBookings()
+        //{
+        //    return await _dbContext.Guests
+        //        .Include(g => g.)
+        //        .Where(g => g.Bookings.Any(b => b.CheckIn > DateTime.UtcNow))
+        //        .ToListAsync();
+        //}
+    }
 }

@@ -4,6 +4,7 @@ using BookMyHome.Infrastructure.EntityFrameWork;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BookMyHome.BlazorWebApp.Server.Migrations
 {
     [DbContext(typeof(EntityFrameworkDBContext))]
-    partial class EntityFrameworkDBContextModelSnapshot : ModelSnapshot
+    [Migration("20250312210358_hostNullable")]
+    partial class hostNullable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -180,7 +183,7 @@ namespace BookMyHome.BlazorWebApp.Server.Migrations
             modelBuilder.Entity("BookMyHome.Domain.Entities.Accommodation", b =>
                 {
                     b.HasOne("BookMyHome.Domain.Entities.Host", "Owner")
-                        .WithMany()
+                        .WithMany("AccommodationsOwned")
                         .HasForeignKey("HostId");
 
                     b.Navigation("Owner");
@@ -189,18 +192,33 @@ namespace BookMyHome.BlazorWebApp.Server.Migrations
             modelBuilder.Entity("BookMyHome.Domain.Entities.Booking", b =>
                 {
                     b.HasOne("BookMyHome.Domain.Entities.Accommodation", "Accommodation")
-                        .WithMany()
+                        .WithMany("Bookings")
                         .HasForeignKey("AccommodationId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("BookMyHome.Domain.Entities.Guest", "Guest")
-                        .WithMany()
+                        .WithMany("Bookings")
                         .HasForeignKey("GuestId");
 
                     b.Navigation("Accommodation");
 
                     b.Navigation("Guest");
+                });
+
+            modelBuilder.Entity("BookMyHome.Domain.Entities.Accommodation", b =>
+                {
+                    b.Navigation("Bookings");
+                });
+
+            modelBuilder.Entity("BookMyHome.Domain.Entities.Guest", b =>
+                {
+                    b.Navigation("Bookings");
+                });
+
+            modelBuilder.Entity("BookMyHome.Domain.Entities.Host", b =>
+                {
+                    b.Navigation("AccommodationsOwned");
                 });
 #pragma warning restore 612, 618
         }

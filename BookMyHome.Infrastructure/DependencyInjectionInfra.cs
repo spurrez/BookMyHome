@@ -1,5 +1,8 @@
 ﻿using BookMyHome.Application.Interfaces.ReposInterfaces;
+using BookMyHome.Application.Interfaces.UnitOfWork;
+using BookMyHome.Infrastructure.EntityFrameWork;
 using BookMyHome.Infrastructure.Persistence.Repositories;
+using BookMyHome.Infrastructure.Persistence.UnitOfWork;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
@@ -18,7 +21,11 @@ namespace BookMyHome.Infrastructure
 			services.AddScoped<IAccommodationRepository, AccommodationRepository>();
 			services.AddScoped<IGuestRepository, GuestRepository>();
 
-			return services;
+
+	
+			services.AddScoped<IUnitOfWork, UnitOfWork>();
+
+            return services;
 		}
 	}
 }

@@ -39,30 +39,28 @@ namespace BookMyHome.Infrastructure.Persistence.Repositories
 			await _dbContext.SaveChangesAsync();
 			return createdBooking.Entity;
 		}
-		public async Task<Accommodation> UpdateAccommodation(int id, Accommodation booking)
+		public async Task<Accommodation> UpdateAccommodation(int id, Accommodation accommodation)
 		{
-			var existingAccomodation = await _dbContext.Accommodations.FindAsync(id);
-			if (existingAccomodation == null)
+			var existingAccommodation = await _dbContext.Accommodations.FindAsync(id);
+			if (existingAccommodation == null)
 				return null;
 
 
-			// This sets the original value of the RowVersion to the value provided by the client.
-			// When SaveChanges is called, EF Core compares the original RowVersion with the current one in the database.
-			// If the RowVersion has changed (i.e., someone else modified the entity), a concurrency exception will be thrown/caught.
-			_dbContext.Entry(existingAccomodation).Property(b => b.RowVersion).OriginalValue = booking.RowVersion;
+			_dbContext.Entry(existingAccommodation).Property(b => b.RowVersion).OriginalValue = accommodation.RowVersion;
 
 			// change the updated values here
-			_dbContext.Update(existingAccomodation); // TODO prob fix this (check how booking is done)
+			_dbContext.Update(existingAccommodation);
+            _dbContext.Entry(existingAccommodation).CurrentValues.SetValues(accommodation);
 
-			try
+            try
 			{
 				await _dbContext.SaveChangesAsync();
-				return existingAccomodation;
+				return existingAccommodation;
 
 			}
 			catch (DbUpdateConcurrencyException)
 			{
-				throw new InvalidOperationException("The booking was modified by another user.");
+				throw new InvalidOperationException("The accommodation was modified by another user.");
 			}
 		}
 		public async Task<bool> DeleteAccommodation(int id)
@@ -76,5 +74,12 @@ namespace BookMyHome.Infrastructure.Persistence.Repositories
 			await _dbContext.SaveChangesAsync();
 			return true;
 		}
-	}
+
+        //public async Task<IEnumerable<Accommodation>> GetAvailableAccommodations()
+        //{
+        //    return await _dbContext.Set<Accommodation>()
+        //        .Where(a => a.IsAvailable)
+        //        .ToListAsync();
+        //}
+    }
 }

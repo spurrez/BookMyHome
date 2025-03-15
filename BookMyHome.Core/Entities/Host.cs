@@ -10,8 +10,5 @@ namespace BookMyHome.Domain.Entities
 {
 	public class Host : User
 	{
-
-		public virtual ICollection<Accommodation>? AccommodationsOwned { get; set; }
-
 	}
 }

@@ -9,6 +9,6 @@ namespace BookMyHome.Domain.Entities
 {
 	public class Guest : User
 	{
-		public virtual ICollection<Booking>? Bookings { get; set; }
+
 	}
 }
