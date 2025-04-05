@@ -15,7 +15,7 @@ namespace BookMyHome.Infrastructure.Persistence.UnitOfWork
         private readonly EntityFrameworkDBContext _dbContext;
         private IDbContextTransaction? _dbTransaction;
         public IBookingRepository BookingRepository { get; } // consider adding a generic base repository in the future
-        public IAccommodationRepository AccommodationRepository { get; private set; }
+        public IAccommodationRepository AccommodationRepository { get; }
         public IHostRepository HostRepository { get; private set; }
         public IGuestRepository GuestRepository { get; private set; }
 

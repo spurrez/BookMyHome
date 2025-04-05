@@ -10,11 +10,12 @@ namespace BookMyHome.Application.Interfaces.ReposInterfaces
 {
     public interface IGuestRepository
 	{
-		Task<IEnumerable<Guest>?> GetAllGuests();
-		Task<Guest?> GetGuestById(int id);
-		Task<Guest> CreateGuest(Guest guest);
-		Task<Guest> UpdateGuest(int id, Guest guest);
+		Task<IEnumerable<GuestUser>?> GetAllGuests();
+		Task<GuestUser?> GetGuestById(int id);
+		Task<GuestUser> CreateGuest(GuestUser guest);
+		Task<GuestUser> UpdateGuest(int id, GuestUser guest);
 		Task<bool> DeleteGuest(int id);
+		Task<GuestUser?> GetGuestByName(string firstName, string lastName);
 
 	}
 }

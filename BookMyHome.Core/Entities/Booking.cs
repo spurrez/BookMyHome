@@ -13,20 +13,31 @@ namespace BookMyHome.Domain.Entities
 	public class Booking
 	{
 		[Key]
-		[DatabaseGenerated(DatabaseGeneratedOption.Identity)]
 		public int BookingId { get; set; }
 		[Required]
 		public DateTime CheckIn { get; set; }
 		[Required]
 		public DateTime CheckOut { get; set; }
+		public BookingStatus Status { get; set; } = BookingStatus.Pending;
 
-        // Foreign key: A Booking is associated with one Accommodation
-        public int AccommodationId { get; set; }
-		public virtual Accommodation Accommodation { get; set; }
+		[Required]
+		public int GuestAmount { get; set; }
+		public string? SpecialRequests { get; set; }
+
+		//public int? GuestRating { get; set; }  // Rating given to the guest
+		//public int? HostRating { get; set; }   // Rating given to the host
+		//public string? GuestReview { get; set; }
+		//public string? HostReview { get; set; }
+		//public bool IsPaid { get; set; } = false;
+
+
+		// Foreign key: A Booking is associated with one Accommodation
+		public int AccommodationId { get; set; }
+		public Accommodation Accommodation { get; set; }
 
 		// Foreign key: A Booking is made by one Guest
-		public int? GuestId { get; set; }
-		public virtual Guest? Guest { get; set; }
+		public int GuestId { get; set; }
+		public GuestUser Guest { get; set; }
 
 
         [Timestamp]
@@ -64,6 +75,15 @@ namespace BookMyHome.Domain.Entities
 				CheckIn < existingBooking.CheckOut && CheckOut > existingBooking.CheckIn
 			);
 		}
+		public enum BookingStatus
+		{
+			Pending,    // Awaiting host approval
+			Confirmed,  // Approved by host or auto-confirmed
+			Declined,   // Rejected by host
+			Cancelled,  // Cancelled by guest or host
+			Completed   // Stay completed
+		}
+
 
 	}
 }

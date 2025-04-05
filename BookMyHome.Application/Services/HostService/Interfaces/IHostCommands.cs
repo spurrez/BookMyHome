@@ -9,8 +9,8 @@ namespace BookMyHome.Application.Services.HostService.Interfaces
 {
     public interface IHostCommands
     {
-        Task<Host> CreateHost(Host host);
-        Task<Host> UpdateHost(int id, Host host);
+        Task<HostUser> CreateHost(HostUser host);
+        Task<HostUser> UpdateHost(int id, HostUser host);
         Task<bool> DeleteHost(int id);
     }
 }

@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace BookMyHome.BlazorWebApp.Server.Migrations
 {
     /// <inheritdoc />
-    public partial class fullReset : Migration
+    public partial class TryAgain2 : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -15,7 +15,7 @@ namespace BookMyHome.BlazorWebApp.Server.Migrations
                 name: "Guests",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
+                    UserId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     FirstName = table.Column<string>(type: "nvarchar(25)", maxLength: 25, nullable: false),
                     LastName = table.Column<string>(type: "nvarchar(25)", maxLength: 25, nullable: false),
@@ -26,14 +26,14 @@ namespace BookMyHome.BlazorWebApp.Server.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Guests", x => x.Id);
+                    table.PrimaryKey("PK_Guests", x => x.UserId);
                 });
 
             migrationBuilder.CreateTable(
                 name: "Hosts",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
+                    UserId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     FirstName = table.Column<string>(type: "nvarchar(25)", maxLength: 25, nullable: false),
                     LastName = table.Column<string>(type: "nvarchar(25)", maxLength: 25, nullable: false),
@@ -44,7 +44,7 @@ namespace BookMyHome.BlazorWebApp.Server.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Hosts", x => x.Id);
+                    table.PrimaryKey("PK_Hosts", x => x.UserId);
                 });
 
             migrationBuilder.CreateTable(
@@ -57,7 +57,7 @@ namespace BookMyHome.BlazorWebApp.Server.Migrations
                     Description = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Address = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
                     PricePerNight = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
-                    HostId = table.Column<int>(type: "int", nullable: false),
+                    HostId = table.Column<int>(type: "int", nullable: true),
                     RowVersion = table.Column<byte[]>(type: "rowversion", rowVersion: true, nullable: true)
                 },
                 constraints: table =>
@@ -67,8 +67,7 @@ namespace BookMyHome.BlazorWebApp.Server.Migrations
                         name: "FK_Accommodations_Hosts_HostId",
                         column: x => x.HostId,
                         principalTable: "Hosts",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "UserId");
                 });
 
             migrationBuilder.CreateTable(
@@ -80,7 +79,7 @@ namespace BookMyHome.BlazorWebApp.Server.Migrations
                     CheckIn = table.Column<DateTime>(type: "datetime2", nullable: false),
                     CheckOut = table.Column<DateTime>(type: "datetime2", nullable: false),
                     AccommodationId = table.Column<int>(type: "int", nullable: false),
-                    GuestId = table.Column<int>(type: "int", nullable: false),
+                    GuestId = table.Column<int>(type: "int", nullable: true),
                     RowVersion = table.Column<byte[]>(type: "rowversion", rowVersion: true, nullable: true)
                 },
                 constraints: table =>
@@ -96,8 +95,7 @@ namespace BookMyHome.BlazorWebApp.Server.Migrations
                         name: "FK_Bookings_Guests_GuestId",
                         column: x => x.GuestId,
                         principalTable: "Guests",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "UserId");
                 });
 
             migrationBuilder.CreateIndex(
@@ -113,7 +111,9 @@ namespace BookMyHome.BlazorWebApp.Server.Migrations
             migrationBuilder.CreateIndex(
                 name: "IX_Bookings_GuestId",
                 table: "Bookings",
-                column: "GuestId");
+                column: "GuestId",
+                unique: true,
+                filter: "[GuestId] IS NOT NULL");
         }
 
         /// <inheritdoc />

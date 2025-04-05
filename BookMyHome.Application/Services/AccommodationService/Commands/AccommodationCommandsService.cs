@@ -1,4 +1,5 @@
 ﻿using BookMyHome.Application.Interfaces.ReposInterfaces;
+using BookMyHome.Application.Interfaces.UnitOfWork;
 using BookMyHome.Application.Services.AccommodationService.Interfaces;
 using BookMyHome.Domain.CustomException;
 using BookMyHome.Domain.Entities;
@@ -13,26 +14,58 @@ namespace BookMyHome.Application.Services.AccommodationService.Commands
     public class AccommodationCommandsService : IAccommodationCommands
     {
 
-        private readonly IAccommodationRepository _accommodationRepository;
-
-        public AccommodationCommandsService(IAccommodationRepository accommodationRepository)
+        private readonly IUnitOfWork _unitOfWork;
+        public AccommodationCommandsService(IUnitOfWork unitOfWork)
         {
-            _accommodationRepository = accommodationRepository;
+            _unitOfWork = unitOfWork;
         }
 
         public async Task<Accommodation> CreateAccommodation(Accommodation accommodation)
         {
-            return await _accommodationRepository.CreateAccommodation(accommodation);
+            await _unitOfWork.BeginTransactionAsync();
+            try
+            {
+                Accommodation newAccommodation = await _unitOfWork.AccommodationRepository.CreateAccommodation(accommodation);
+                await _unitOfWork.CommitTransactionAsync();
+                return newAccommodation;
+            }
+            catch
+            {
+                await _unitOfWork.RollbackTransactionAsync();
+                throw;
+            }
         }
 
         public async Task<Accommodation> UpdateAccommodation(int id, Accommodation accommodation)
         {
-            return await _accommodationRepository.UpdateAccommodation(id, accommodation);
+            await _unitOfWork.BeginTransactionAsync();
+            try
+            {
+                Accommodation updatedAccommodation = await _unitOfWork.AccommodationRepository.UpdateAccommodation(id, accommodation);
+                await _unitOfWork.CommitTransactionAsync();
+                return updatedAccommodation;
+            }
+            catch
+            {
+                await _unitOfWork.RollbackTransactionAsync();
+                throw;
+            }
         }
 
         public async Task<bool> DeleteAccommodation(int id)
         {
-            return await _accommodationRepository.DeleteAccommodation(id);
+            await _unitOfWork.BeginTransactionAsync();
+            try
+            {
+                bool isDeleted = await _unitOfWork.AccommodationRepository.DeleteAccommodation(id);
+                await _unitOfWork.CommitTransactionAsync();
+                return isDeleted;
+            }
+            catch (Exception)
+            {
+                await _unitOfWork.RollbackTransactionAsync();
+                throw;
+            }
         }
     }
 }

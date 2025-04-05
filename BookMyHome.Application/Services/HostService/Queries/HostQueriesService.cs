@@ -17,12 +17,12 @@ namespace BookMyHome.Application.Services.HostService.Queries
         {
             _hostRepository = hostRepository;
         }
-        public async Task<IEnumerable<Host>?> GetAllHosts()
+        public async Task<IEnumerable<HostUser>?> GetAllHosts()
         {
             return await _hostRepository.GetAllHosts();
         }
 
-        public async Task<Host?> GetHostById(int id)
+        public async Task<HostUser?> GetHostById(int id)
         {
             return await _hostRepository.GetHostById(id);
         }

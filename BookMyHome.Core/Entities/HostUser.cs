@@ -8,7 +8,8 @@ using System.Threading.Tasks;
 
 namespace BookMyHome.Domain.Entities
 {
-	public class Host : User
+	public class HostUser : User
 	{
+		//public ICollection<Accommodation> Accommodations { get; set; } = new List<Accommodation>();
 	}
 }

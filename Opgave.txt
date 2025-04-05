@@ -70,7 +70,8 @@ Non-Functional Requirements:
     Slutdato skal ligge efter startdato
 
     Der må ikke være overlappende bookings. Dvs.
-        Ved opret og ret skal det tjekkes at der ikke opstår overlappende bookings. Sker det skal der kastes en Custom exception - "OverlapingBookingException"
+        Ved opret og ret skal det tjekkes at der ikke opstår overlappende bookings. 
+        Sker det skal der kastes en Custom exception - "OverlapingBookingException"
 
 
 

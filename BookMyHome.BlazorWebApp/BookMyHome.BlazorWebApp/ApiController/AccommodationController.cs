@@ -37,6 +37,15 @@ namespace BookMyHome.BlazorWebApp.Server.ApiController
 			return Ok(accommodations);
 		}
 
+		[HttpGet("host/{hostId}")]
+		public async Task<IActionResult> GetHostAccommodations(int hostId)
+		{
+			var accommodations = await _accommodationQueries.GetAllAccommodationsByHost(hostId);
+			if (accommodations == null || !accommodations.Any())
+				return NotFound("Did not find any accommodations by this host");
+			return Ok(accommodations);
+		}
+
 		[HttpPost]
 		public async Task<IActionResult> Post(Accommodation accommodation)
 		{

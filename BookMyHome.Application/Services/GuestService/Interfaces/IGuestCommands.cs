@@ -9,8 +9,8 @@ namespace BookMyHome.Application.Services.GuestService.Interfaces
 {
     public interface IGuestCommands
     {
-        Task<Guest> CreateGuest(Guest guest);
-        Task<Guest> UpdateGuest(int id, Guest guest);
+        Task<GuestUser> CreateGuest(GuestUser guest);
+        Task<GuestUser> UpdateGuest(int id, GuestUser guest);
         Task<bool> DeleteGuest(int id);
     }
 }

@@ -2,7 +2,7 @@
 using BookMyHome.Application.Services.HostService.Interfaces;
 using BookMyHome.Domain.Entities;
 using Microsoft.AspNetCore.Mvc;
-using Host = BookMyHome.Domain.Entities.Host;
+using HostUser = BookMyHome.Domain.Entities.HostUser;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -38,7 +38,7 @@ namespace BookMyHome.BlazorWebApp.Server.ApiController
 		}
 
 		[HttpPost]
-		public async Task<IActionResult> Post(Host host)
+		public async Task<IActionResult> Post(HostUser host)
 		{
 			var createdHost = await _hostCommands.CreateHost(host);
 			if (createdHost == null)
@@ -47,7 +47,7 @@ namespace BookMyHome.BlazorWebApp.Server.ApiController
 		}
 
 		[HttpPut("{id}")]
-		public async Task<IActionResult> Put(int id, Host host)
+		public async Task<IActionResult> Put(int id, HostUser host)
 		{
 			var updatedHost = await _hostCommands.UpdateHost(id, host);
 			if (updatedHost == null)

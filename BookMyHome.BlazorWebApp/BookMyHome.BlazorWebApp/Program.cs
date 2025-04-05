@@ -1,4 +1,6 @@
 using BookMyHome.Application;
+using BookMyHome.BlazorWebApp.Client.Interfaces;
+using BookMyHome.BlazorWebApp.Client.Services;
 using BookMyHome.BlazorWebApp.Server.Components;
 using BookMyHome.Infrastructure;
 using BookMyHome.Infrastructure.EntityFrameWork;
@@ -15,6 +17,8 @@ namespace BookMyHome.BlazorWebApp.Server
 
 			builder.Services.AddInfrastructure();
 			builder.Services.AddApplication();
+			builder.Services.AddClientServices("https://localhost:7257"); // not sure if good practice to have direct link here but oh well
+
 
 			builder.Services.AddDbContext<EntityFrameworkDBContext>(options =>
 			options.UseSqlServer(
@@ -31,18 +35,6 @@ namespace BookMyHome.BlazorWebApp.Server
 				.AddInteractiveWebAssemblyComponents();
 
 			var app = builder.Build();
-
-
-
-			// Seed the database using shitty test data
-			using (var scope = app.Services.CreateScope())
-			{
-				var services = scope.ServiceProvider;
-				var context = services.GetRequiredService<EntityFrameworkDBContext>();
-
-				// Initialize the seed data
-				SeedData.InitializeSeedData(services, context);
-			}
 
 
 			// Configure the HTTP request pipeline.

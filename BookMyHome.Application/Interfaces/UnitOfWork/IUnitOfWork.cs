@@ -9,7 +9,10 @@ namespace BookMyHome.Application.Interfaces.UnitOfWork
 {
     public interface IUnitOfWork
     {
-        public IBookingRepository BookingRepository { get; }
+        IBookingRepository BookingRepository { get; }
+        IAccommodationRepository AccommodationRepository { get; }
+        IHostRepository HostRepository { get; }
+        IGuestRepository GuestRepository { get; }
         Task BeginTransactionAsync();
         Task CommitTransactionAsync();
         Task RollbackTransactionAsync();

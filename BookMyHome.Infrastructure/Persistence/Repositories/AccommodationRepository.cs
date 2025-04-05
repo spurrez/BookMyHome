@@ -23,6 +23,11 @@ namespace BookMyHome.Infrastructure.Persistence.Repositories
 			return await _dbContext.Accommodations.AsNoTracking().ToListAsync();
 		}
 
+		public async Task<IEnumerable<Accommodation>?> GetAllAccommodationsByHost(int id)
+		{
+			return await _dbContext.Accommodations.Where(a => a.HostId == id).AsNoTracking().ToListAsync();
+		}
+
 		public async Task<Accommodation?> GetAccommodationById(int id)
 		{
 			var accommodation = await _dbContext.Accommodations.FindAsync(id);
@@ -81,5 +86,13 @@ namespace BookMyHome.Infrastructure.Persistence.Repositories
         //        .Where(a => a.IsAvailable)
         //        .ToListAsync();
         //}
+
+		public async Task<Accommodation?> GetAccommodationByTitle(string title)
+		{
+			var accommodation = await _dbContext.Accommodations.FirstOrDefaultAsync(a => a.Title == title);
+			if (accommodation == null)
+				return null;
+			return accommodation;
+		}
     }
 }

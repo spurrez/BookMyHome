@@ -17,9 +17,9 @@ namespace BookMyHome.Infrastructure.EntityFrameWork
 			: base(options)
 		{
 		}
-        public DbSet<Host> Hosts { get; set; }
+        public DbSet<HostUser> Hosts { get; set; }
 		public DbSet<Booking> Bookings { get; set; }
-        public DbSet<Guest> Guests { get; set; }
+        public DbSet<GuestUser> Guests { get; set; }
         public DbSet<Accommodation> Accommodations { get; set; }
 		
         protected override void OnModelCreating(ModelBuilder modelBuilder)

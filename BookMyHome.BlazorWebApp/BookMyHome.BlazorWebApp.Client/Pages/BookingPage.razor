@@ -1,0 +1,49 @@
+﻿@page "/create/booking"
+@using BookMyHome.BlazorWebApp.Client.DTO
+@using BookMyHome.BlazorWebApp.Client.Interfaces
+@using BookMyHome.Domain.Entities
+@inject IBookingServiceBlazor BookingService
+@rendermode InteractiveAuto
+
+<PageTitle>Booking</PageTitle>
+<h3>Booking</h3>
+
+@if (booking == null)
+{
+	<p>Loading...</p>
+}
+else
+{
+	@foreach (var booking in allBookings)
+	{
+		<p>@booking.CheckIn</p>
+		<p>@booking.CheckOut</p>
+	}
+
+	<EditForm EditContext="editContext">
+		<div class="col-md-6 mb-3">
+			<label for="CheckIn">CheckIn</label>
+			<InputDate id="CheckIn" @bind-Value="booking.CheckIn" class="form-control" />
+		</div>
+		<div class="col-md-6 mb-3">
+			<label for="CheckOut">CheckOut</label>
+			<InputDate id="CheckOut" @bind-Value="booking.CheckOut" class="form-control" />
+		</div>
+
+	</EditForm>
+}
+
+
+@code {
+	private BookingDTO booking = new BookingDTO(); // add default value
+	private IEnumerable<BookingDTO> allBookings = new List<BookingDTO>();
+
+	private EditContext editContext;
+
+	protected async override Task OnInitializedAsync()
+	{
+		editContext = new EditContext(booking);
+
+		allBookings = await BookingService.GetAllBookings();
+	}
+}

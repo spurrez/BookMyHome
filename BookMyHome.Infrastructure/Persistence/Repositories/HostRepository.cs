@@ -13,12 +13,12 @@ namespace BookMyHome.Infrastructure.Persistence.Repositories
 			_dbContext = context;
 		}
 
-		public async Task<IEnumerable<Host?>> GetAllHosts()
+		public async Task<IEnumerable<HostUser>?> GetAllHosts()
 		{
 			return await _dbContext.Hosts.AsNoTracking().ToListAsync();
 		}
 
-		public async Task<Host?> GetHostById(int id)
+		public async Task<HostUser?> GetHostById(int id)
 		{
 			var host = await _dbContext.Hosts.FindAsync(id);
 			if (host == null)
@@ -26,14 +26,14 @@ namespace BookMyHome.Infrastructure.Persistence.Repositories
 			return host;
 		}
 
-		public async Task<Host> CreateHost(Host entity)
+		public async Task<HostUser> CreateHost(HostUser entity)
 		{
 			var createdHost = await _dbContext.Hosts.AddAsync(entity);
 			await _dbContext.SaveChangesAsync();
 			return createdHost.Entity;
 		}
 
-		public async Task<Host> UpdateHost(int id, Host host)
+		public async Task<HostUser> UpdateHost(int id, HostUser host)
 		{
 			var existingHost = await _dbContext.Hosts.FindAsync(id);
 			if (existingHost == null)
@@ -63,9 +63,17 @@ namespace BookMyHome.Infrastructure.Persistence.Repositories
 			return true;
 		}
 
-		public async Task<Host?> GetHostByEmail(string email)
+		public async Task<HostUser?> GetHostByEmail(string email)
 		{
 			return await _dbContext.Hosts.FirstOrDefaultAsync(h => h.Email == email);
+		}
+
+		public async Task<HostUser?> GetHostByName(string firstName, string lastName)
+		{
+			var host = await _dbContext.Hosts.FirstOrDefaultAsync(f => f.FirstName == firstName && f.LastName == lastName);
+			if (host == null)
+				return null;
+			return host;
 		}
         //public async Task<IEnumerable<Host>> GetTopRatedHosts()
         //{

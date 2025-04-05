@@ -9,10 +9,11 @@ namespace BookMyHome.Application.Interfaces.ReposInterfaces
 {
 	public interface IHostRepository
 	{
-		Task<IEnumerable<Host>?> GetAllHosts();
-		Task<Host?> GetHostById(int id);
-		Task<Host> CreateHost(Host host);
-		Task<Host> UpdateHost(int id, Host host);
+		Task<IEnumerable<HostUser>?> GetAllHosts();
+		Task<HostUser?> GetHostById(int id);
+		Task<HostUser> CreateHost(HostUser host);
+		Task<HostUser> UpdateHost(int id, HostUser host);
 		Task<bool> DeleteHost(int id);
+		Task<HostUser?> GetHostByName(string firstName, string lastName);
 	}
 }

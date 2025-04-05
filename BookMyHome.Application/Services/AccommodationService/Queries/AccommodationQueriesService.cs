@@ -23,6 +23,11 @@ namespace BookMyHome.Application.Services.AccommodationService.Queries
             return await _accommodationRepository.GetAllAccommodations();
         }
 
+        public async Task<IEnumerable<Accommodation>?> GetAllAccommodationsByHost(int id)
+        {
+            return await _accommodationRepository.GetAllAccommodationsByHost(id);
+        }
+
         public async Task<Accommodation?> GetAccommodationById(int id)
         {
             return await _accommodationRepository.GetAccommodationById(id);

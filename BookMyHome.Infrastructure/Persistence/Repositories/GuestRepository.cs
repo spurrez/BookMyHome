@@ -18,12 +18,12 @@ namespace BookMyHome.Infrastructure.Persistence.Repositories
 		{
 			_dbContext = dbContext;
 		}
-		public async Task<IEnumerable<Guest>?> GetAllGuests()
+		public async Task<IEnumerable<GuestUser>?> GetAllGuests()
 		{
 			return await _dbContext.Guests.AsNoTracking().ToListAsync();
 		}
 
-		public async Task<Guest?> GetGuestById(int id)
+		public async Task<GuestUser?> GetGuestById(int id)
 		{
 			var guest = await _dbContext.Guests.FindAsync(id);
 			if (guest == null)
@@ -33,13 +33,13 @@ namespace BookMyHome.Infrastructure.Persistence.Repositories
 			return guest;
 		}
 
-		public async Task<Guest> CreateGuest(Guest guest)
+		public async Task<GuestUser> CreateGuest(GuestUser guest)
 		{
 			var createdGuest = await _dbContext.Guests.AddAsync(guest);
 			await _dbContext.SaveChangesAsync();
 			return createdGuest.Entity;
 		}
-		public async Task<Guest> UpdateGuest(int id, Guest guest)
+		public async Task<GuestUser> UpdateGuest(int id, GuestUser guest)
 		{
 			var existingGuest = await _dbContext.Guests.FindAsync(id);
 			if (existingGuest == null)
@@ -73,6 +73,14 @@ namespace BookMyHome.Infrastructure.Persistence.Repositories
 			_dbContext.Guests.Remove(guest);
 			await _dbContext.SaveChangesAsync();
 			return true;
+		}
+
+		public async Task<GuestUser?> GetGuestByName(string firstName, string lastName)
+		{
+			var guest = await _dbContext.Guests.FirstOrDefaultAsync(g => g.FirstName == firstName && g.LastName == lastName);
+			if (guest == null)
+				return null;
+			return guest;
 		}
 
 		// the below might have to do in booking instead of guest repo

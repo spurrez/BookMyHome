@@ -39,7 +39,7 @@ namespace BookMyHome.BlazorWebApp.Server.ApiController
 		}
 
 		[HttpPost]
-		public async Task<IActionResult> Post(Guest guest)
+		public async Task<IActionResult> Post(GuestUser guest)
 		{
 			var createdGuest = await _guestCommands.CreateGuest(guest);
 			if (createdGuest == null)
@@ -48,7 +48,7 @@ namespace BookMyHome.BlazorWebApp.Server.ApiController
 		}
 
 		[HttpPut("{id}")]
-		public async Task<IActionResult> Put(int id, Guest guest)
+		public async Task<IActionResult> Put(int id, GuestUser guest)
 		{
 			var updatedGuest = await _guestCommands.UpdateGuest(id, guest);
 			if (updatedGuest == null)

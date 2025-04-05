@@ -9,7 +9,7 @@ namespace BookMyHome.Application.Services.GuestService.Interfaces
 {
     public interface IGuestQueries
     {
-        Task<IEnumerable<Guest>?> GetAllGuests();
-        Task<Guest?> GetGuestById(int id);
+        Task<IEnumerable<GuestUser>?> GetAllGuests();
+        Task<GuestUser?> GetGuestById(int id);
     }
 }

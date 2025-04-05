@@ -17,12 +17,12 @@ namespace BookMyHome.Application.Services.GuestService.Queries
         {
 			_guestRepository = guestRepository;
         }
-        public async Task<IEnumerable<Guest>?> GetAllGuests()
+        public async Task<IEnumerable<GuestUser>?> GetAllGuests()
         {
             return await _guestRepository.GetAllGuests();
         }
 
-        public async Task<Guest?> GetGuestById(int id)
+        public async Task<GuestUser?> GetGuestById(int id)
         {
             return await _guestRepository.GetGuestById(id);
         }

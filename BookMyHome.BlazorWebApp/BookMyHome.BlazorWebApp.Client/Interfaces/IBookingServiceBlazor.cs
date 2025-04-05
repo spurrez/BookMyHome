@@ -1,13 +1,14 @@
-﻿using BookMyHome.Domain.Entities;
+﻿using BookMyHome.BlazorWebApp.Client.DTO;
+using BookMyHome.Domain.Entities;
 
 namespace BookMyHome.BlazorWebApp.Client.Interfaces
 {
 	public interface IBookingServiceBlazor
 	{
-		Task<IEnumerable<Booking>?> GetAllBookings();
-		Task<Booking?> GetBookingById(Guid id);
-		Task<Booking> CreateBooking(Booking booking);
-		Task<Booking> UpdateBooking(Guid id, Booking booking);
-		Task<bool> DeleteBooking(Guid id);
+		Task<IEnumerable<BookingDTO>?> GetAllBookings();
+		Task<BookingDTO?> GetBookingById(int id);
+		Task<BookingDTO> CreateBooking(BookingDTO booking);
+		Task<BookingDTO> UpdateBooking(int id, BookingDTO booking);
+		Task<bool> DeleteBooking(int id);
 	}
 }

@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BookMyHome.BlazorWebApp.Server.Migrations
 {
     [DbContext(typeof(EntityFrameworkDBContext))]
-    [Migration("20250309163546_fullReset")]
-    partial class fullReset
+    [Migration("20250320124757_TryAgain2")]
+    partial class TryAgain2
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -41,7 +41,7 @@ namespace BookMyHome.BlazorWebApp.Server.Migrations
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("HostId")
+                    b.Property<int?>("HostId")
                         .HasColumnType("int");
 
                     b.Property<decimal>("PricePerNight")
@@ -81,7 +81,7 @@ namespace BookMyHome.BlazorWebApp.Server.Migrations
                     b.Property<DateTime>("CheckOut")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("GuestId")
+                    b.Property<int?>("GuestId")
                         .HasColumnType("int");
 
                     b.Property<byte[]>("RowVersion")
@@ -93,18 +93,20 @@ namespace BookMyHome.BlazorWebApp.Server.Migrations
 
                     b.HasIndex("AccommodationId");
 
-                    b.HasIndex("GuestId");
+                    b.HasIndex("GuestId")
+                        .IsUnique()
+                        .HasFilter("[GuestId] IS NOT NULL");
 
                     b.ToTable("Bookings");
                 });
 
             modelBuilder.Entity("BookMyHome.Domain.Entities.Guest", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<int>("UserId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("UserId"));
 
                     b.Property<string>("Email")
                         .IsRequired()
@@ -134,18 +136,18 @@ namespace BookMyHome.BlazorWebApp.Server.Migrations
                         .ValueGeneratedOnAddOrUpdate()
                         .HasColumnType("rowversion");
 
-                    b.HasKey("Id");
+                    b.HasKey("UserId");
 
                     b.ToTable("Guests");
                 });
 
             modelBuilder.Entity("BookMyHome.Domain.Entities.Host", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<int>("UserId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("UserId"));
 
                     b.Property<string>("Email")
                         .IsRequired()
@@ -175,54 +177,46 @@ namespace BookMyHome.BlazorWebApp.Server.Migrations
                         .ValueGeneratedOnAddOrUpdate()
                         .HasColumnType("rowversion");
 
-                    b.HasKey("Id");
+                    b.HasKey("UserId");
 
                     b.ToTable("Hosts");
                 });
 
             modelBuilder.Entity("BookMyHome.Domain.Entities.Accommodation", b =>
                 {
-                    b.HasOne("BookMyHome.Domain.Entities.Host", "Owner")
-                        .WithMany("AccommodationsOwned")
-                        .HasForeignKey("HostId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                    b.HasOne("BookMyHome.Domain.Entities.Host", "Host")
+                        .WithMany("Accommodations")
+                        .HasForeignKey("HostId");
 
-                    b.Navigation("Owner");
+                    b.Navigation("Host");
                 });
 
             modelBuilder.Entity("BookMyHome.Domain.Entities.Booking", b =>
                 {
                     b.HasOne("BookMyHome.Domain.Entities.Accommodation", "Accommodation")
-                        .WithMany("Bookings")
+                        .WithMany()
                         .HasForeignKey("AccommodationId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("BookMyHome.Domain.Entities.Guest", "Guest")
-                        .WithMany("Bookings")
-                        .HasForeignKey("GuestId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .WithOne("Booking")
+                        .HasForeignKey("BookMyHome.Domain.Entities.Booking", "GuestId");
 
                     b.Navigation("Accommodation");
 
                     b.Navigation("Guest");
                 });
 
-            modelBuilder.Entity("BookMyHome.Domain.Entities.Accommodation", b =>
-                {
-                    b.Navigation("Bookings");
-                });
-
             modelBuilder.Entity("BookMyHome.Domain.Entities.Guest", b =>
                 {
-                    b.Navigation("Bookings");
+                    b.Navigation("Booking")
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("BookMyHome.Domain.Entities.Host", b =>
                 {
-                    b.Navigation("AccommodationsOwned");
+                    b.Navigation("Accommodations");
                 });
 #pragma warning restore 612, 618
         }

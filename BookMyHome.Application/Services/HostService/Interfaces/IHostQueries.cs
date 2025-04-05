@@ -9,7 +9,7 @@ namespace BookMyHome.Application.Services.HostService.Interfaces
 {
     public interface IHostQueries
     {
-        Task<IEnumerable<Host>?> GetAllHosts();
-        Task<Host?> GetHostById(int id);
+        Task<IEnumerable<HostUser>?> GetAllHosts();
+        Task<HostUser?> GetHostById(int id);
     }
 }

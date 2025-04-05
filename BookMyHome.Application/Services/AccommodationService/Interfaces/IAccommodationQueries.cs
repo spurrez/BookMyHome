@@ -11,5 +11,6 @@ namespace BookMyHome.Application.Services.BookingService.Interfaces
 	{
         Task<IEnumerable<Accommodation>?> GetAllAccommodation();
         Task<Accommodation?> GetAccommodationById(int id);
+        Task<IEnumerable<Accommodation>?> GetAllAccommodationsByHost(int id);
     }
 }

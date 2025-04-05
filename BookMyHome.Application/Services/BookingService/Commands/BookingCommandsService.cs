@@ -31,7 +31,7 @@ namespace BookMyHome.Application.Services.BookingService.Commands
                     throw new OverlappingBookingException();
 
                 Booking newBooking = await _unitOfWork.BookingRepository.CreateBooking(booking);
-                await _unitOfWork.CommitTransactionAsync();
+                await _unitOfWork.CommitTransactionAsync(); // Perchance refactor to have SaveChanges() to commit method in UnitOfWork class in infrastructure
                 return newBooking;
             }
             catch
@@ -70,7 +70,7 @@ namespace BookMyHome.Application.Services.BookingService.Commands
             await _unitOfWork.BeginTransactionAsync();
             try
             {
-                var isDeleted = await _unitOfWork.BookingRepository.DeleteBooking(id);
+                bool isDeleted = await _unitOfWork.BookingRepository.DeleteBooking(id);
                 await _unitOfWork.CommitTransactionAsync();
                 return isDeleted;
             }

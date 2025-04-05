@@ -7,6 +7,7 @@ using System.Net.Http.Json;
 using System.Text;
 using System.Threading.Tasks;
 using BookMyHome.BlazorWebApp.Client.Interfaces;
+using BookMyHome.BlazorWebApp.Client.DTO;
 
 namespace BookMyHome.BlazorWebApp.Client.Services
 {
@@ -17,18 +18,18 @@ namespace BookMyHome.BlazorWebApp.Client.Services
 		{
 			this.httpClient = httpClient;
 		}
-		public async Task<IEnumerable<Booking>?> GetAllBookings()
+		public async Task<IEnumerable<BookingDTO>?> GetAllBookings()
 		{
-			var result = await httpClient.GetFromJsonAsync<Booking[]>("api/booking");
-			return result ?? Array.Empty<Booking>();
+			var result = await httpClient.GetFromJsonAsync<BookingDTO[]>("api/booking");
+			return result ?? Array.Empty<BookingDTO>();
 		}
 
-		public async Task<Booking?> GetBookingById(Guid id)
+		public async Task<BookingDTO?> GetBookingById(int id)
 		{
-			var result = await httpClient.GetFromJsonAsync<Booking>($"api/booking/{id}");
+			var result = await httpClient.GetFromJsonAsync<BookingDTO>($"api/booking/{id}");
 			return result;
 		}
-		public async Task<Booking> CreateBooking(Booking booking)
+		public async Task<BookingDTO> CreateBooking(BookingDTO booking)
 		{
 			var response = await httpClient.PostAsJsonAsync("api/booking", booking);
 
@@ -36,19 +37,19 @@ namespace BookMyHome.BlazorWebApp.Client.Services
 			response.EnsureSuccessStatusCode();
 
 			// Deserialize the response body to a Booking object
-			var createdBooking = await response.Content.ReadFromJsonAsync<Booking>();
+			var createdBooking = await response.Content.ReadFromJsonAsync<BookingDTO>();
 			return createdBooking;
 		}
 
-		public async Task<Booking> UpdateBooking(Guid id, Booking booking)
+		public async Task<BookingDTO> UpdateBooking(int id, BookingDTO booking)
 		{
 			var response = await httpClient.PutAsJsonAsync($"api/booking/{id}", booking);
 			response.EnsureSuccessStatusCode();
-			var updatedBooking = await response.Content.ReadFromJsonAsync<Booking>();
+			var updatedBooking = await response.Content.ReadFromJsonAsync<BookingDTO>();
 			return updatedBooking;
 		}
 
-		public async Task<bool> DeleteBooking(Guid id)
+		public async Task<bool> DeleteBooking(int id)
 		{
 			var response = await httpClient.DeleteAsync($"api/booking/{id}");
 			return response.IsSuccessStatusCode;

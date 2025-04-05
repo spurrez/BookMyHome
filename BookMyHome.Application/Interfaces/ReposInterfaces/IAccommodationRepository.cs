@@ -15,6 +15,8 @@ namespace BookMyHome.Application.Interfaces.ReposInterfaces
 		Task<Accommodation> CreateAccommodation(Accommodation acco);
 		Task<Accommodation> UpdateAccommodation(int id, Accommodation acco);
 		Task<bool> DeleteAccommodation(int id);
+		Task<IEnumerable<Accommodation>?> GetAllAccommodationsByHost(int id);
+		Task<Accommodation?> GetAccommodationByTitle(string title);
 
 	}
 }
