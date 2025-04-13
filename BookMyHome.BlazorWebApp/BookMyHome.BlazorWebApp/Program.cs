@@ -15,6 +15,10 @@ namespace BookMyHome.BlazorWebApp.Server
 		{
 			var builder = WebApplication.CreateBuilder(args);
 
+			// for enabling swagger
+			builder.Services.AddEndpointsApiExplorer();
+			builder.Services.AddSwaggerGen();
+
 			builder.Services.AddInfrastructure();
 			builder.Services.AddApplication();
 			builder.Services.AddClientServices("https://localhost:7257"); // not sure if good practice to have direct link here but oh well
@@ -41,6 +45,8 @@ namespace BookMyHome.BlazorWebApp.Server
 			if (app.Environment.IsDevelopment())
 			{
 				app.UseWebAssemblyDebugging();
+				app.UseSwagger();
+				app.UseSwaggerUI();
 			}
 			else
 			{

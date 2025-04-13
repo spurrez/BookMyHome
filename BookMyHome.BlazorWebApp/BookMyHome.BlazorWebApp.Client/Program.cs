@@ -14,11 +14,11 @@ namespace BookMyHome.BlazorWebApp.Client
             var builder = WebAssemblyHostBuilder.CreateDefault(args);
 
 
-			//NOT SURE IF THIS IS NEEDED. chatgpt seems to think so but i dont see it
-			//builder.Services.AddHttpClient<IBookingServiceBlazor, BookingServiceBlazor>(client =>
-			//{
-			//	client.BaseAddress = new Uri(builder.HostEnvironment.BaseAddress);
-			//});
+			////NOT SURE IF THIS IS NEEDED. chatgpt seems to think so but i dont see it
+			builder.Services.AddHttpClient<IBookingServiceBlazor, BookingServiceBlazor>(client =>
+			{
+				client.BaseAddress = new Uri("https://localhost:7257");
+			});
 
 			//// Add other services as needed (e.g., Navigation, State, etc.)
 			//builder.Services.AddScoped<IBookingServiceBlazor, BookingServiceBlazor>();

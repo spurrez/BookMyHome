@@ -3,12 +3,12 @@
 @using BookMyHome.BlazorWebApp.Client.Interfaces
 @using BookMyHome.Domain.Entities
 @inject IBookingServiceBlazor BookingService
-@rendermode InteractiveAuto
+@rendermode InteractiveAuto // this makes it so httpclient DI is needed in both client and server program.cs
 
 <PageTitle>Booking</PageTitle>
 <h3>Booking</h3>
 
-@if (booking == null)
+@if (booking == null || editContext == null)
 {
 	<p>Loading...</p>
 }
@@ -35,13 +35,14 @@ else
 
 
 @code {
-	private BookingDTO booking = new BookingDTO(); // add default value
-	private IEnumerable<BookingDTO> allBookings = new List<BookingDTO>();
+	private BookingDTO? booking;
+	private IEnumerable<BookingDTO> allBookings = new List<BookingDTO>(); // this is purely defensive coding so its fine to do in frontend
 
-	private EditContext editContext;
+	private EditContext? editContext;
 
 	protected async override Task OnInitializedAsync()
 	{
+		booking = new BookingDTO();
 		editContext = new EditContext(booking);
 
 		allBookings = await BookingService.GetAllBookings();

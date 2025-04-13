@@ -7,7 +7,7 @@ namespace BookMyHome.BlazorWebApp.Server
 	{
 		public static void AddClientServices(this IServiceCollection services, string backendUrl)
 		{
-			services.AddScoped<IBookingServiceBlazor, BookingServiceBlazor>();
+			//services.AddScoped<IBookingServiceBlazor, BookingServiceBlazor>();
 
 			services.AddHttpClient<IBookingServiceBlazor, BookingServiceBlazor>(client =>
 			{
