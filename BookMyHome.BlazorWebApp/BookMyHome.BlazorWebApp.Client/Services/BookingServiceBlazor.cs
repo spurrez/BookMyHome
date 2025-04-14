@@ -7,7 +7,7 @@ using System.Net.Http.Json;
 using System.Text;
 using System.Threading.Tasks;
 using BookMyHome.BlazorWebApp.Client.Interfaces;
-using BookMyHome.BlazorWebApp.Client.DTO;
+using BookMyHome.Application.DTO;
 
 namespace BookMyHome.BlazorWebApp.Client.Services
 {

@@ -1,4 +1,4 @@
-﻿using BookMyHome.BlazorWebApp.Client.DTO;
+﻿using BookMyHome.Application.DTO;
 using BookMyHome.Domain.Entities;
 
 namespace BookMyHome.BlazorWebApp.Client.Interfaces

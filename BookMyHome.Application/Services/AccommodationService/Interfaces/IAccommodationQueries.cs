@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace BookMyHome.Application.Services.BookingService.Interfaces
+namespace BookMyHome.Application.Services.AccommodationService.Interfaces
 {
     public interface IAccommodationQueries
 	{

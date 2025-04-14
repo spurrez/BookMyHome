@@ -1,5 +1,4 @@
 ﻿using BookMyHome.Application.Services.AccommodationService.Interfaces;
-using BookMyHome.Application.Services.BookingService.Interfaces;
 using BookMyHome.Domain.Entities;
 using Microsoft.AspNetCore.Mvc;
 

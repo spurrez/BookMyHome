@@ -1,4 +1,4 @@
-﻿namespace BookMyHome.BlazorWebApp.Client.DTO
+﻿namespace BookMyHome.Application.DTO
 {
     public class BookingDTO
     {

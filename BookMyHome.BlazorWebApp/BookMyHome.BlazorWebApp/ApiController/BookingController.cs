@@ -1,7 +1,7 @@
-﻿using BookMyHome.Application.Interfaces;
+﻿using BookMyHome.Application.DTO;
+using BookMyHome.Application.Interfaces;
 using BookMyHome.Application.Interfaces.ReposInterfaces;
 using BookMyHome.Application.Services.BookingService.Interfaces;
-using BookMyHome.BlazorWebApp.Client.DTO;
 using BookMyHome.Domain.Entities;
 using BookMyHome.Infrastructure.Persistence.Repositories;
 using Microsoft.AspNetCore.Mvc;

@@ -1,0 +1,43 @@
+﻿@page "/bookings"
+@using Microsoft.EntityFrameworkCore
+@using Microsoft.AspNetCore.Components.QuickGrid
+@using BookMyHome.Domain.Entities
+@using BookMyHome.Infrastructure.EntityFrameWork
+@implements IAsyncDisposable
+@inject IDbContextFactory<BookMyHome.Infrastructure.EntityFrameWork.EntityFrameworkDBContext> DbFactory
+
+<PageTitle>Index</PageTitle>
+
+<h1>Index</h1>
+
+<p>
+    <a href="bookings/create">Create New</a>
+</p>
+
+<QuickGrid Class="table" Items="context.Bookings">
+    <PropertyColumn Property="booking => booking.CheckIn" />
+    <PropertyColumn Property="booking => booking.CheckOut" />
+    <PropertyColumn Property="booking => booking.Status" />
+    <PropertyColumn Property="booking => booking.GuestAmount" />
+    <PropertyColumn Property="booking => booking.SpecialRequests" />
+    <PropertyColumn Property="booking => booking.AccommodationId" />
+    <PropertyColumn Property="booking => booking.GuestId" />
+    <PropertyColumn Property="booking => booking.RowVersion" />
+
+    <TemplateColumn Context="booking">
+        <a href="@($"bookings/edit?bookingid={booking.BookingId}")">Edit</a> |
+        <a href="@($"bookings/details?bookingid={booking.BookingId}")">Details</a> |
+        <a href="@($"bookings/delete?bookingid={booking.BookingId}")">Delete</a>
+    </TemplateColumn>
+</QuickGrid>
+
+@code {
+    private EntityFrameworkDBContext context = default!;
+
+    protected override void OnInitialized()
+    {
+        context = DbFactory.CreateDbContext();
+    }
+
+    public async ValueTask DisposeAsync() => await context.DisposeAsync();
+}

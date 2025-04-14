@@ -1,6 +1,5 @@
 ﻿using BookMyHome.Application.Interfaces.ReposInterfaces;
 using BookMyHome.Application.Services.AccommodationService.Interfaces;
-using BookMyHome.Application.Services.BookingService.Interfaces;
 using BookMyHome.Domain.Entities;
 using System;
 using System.Collections.Generic;

@@ -1,0 +1,56 @@
+﻿@page "/bookings/details"
+@using BookMyHome.Application.DTO
+@inject NavigationManager NavigationManager
+
+<PageTitle>Details</PageTitle>
+
+<h1>Details</h1>
+
+<div>
+    <h2>Booking</h2>
+    <hr />
+    @if (booking is null)
+    {
+        <p><em>Loading...</em></p>
+    }
+    else {
+        <dl class="row">
+            <dt class="col-sm-2">CheckIn</dt>
+            <dd class="col-sm-10">@booking.CheckIn</dd>
+            <dt class="col-sm-2">CheckOut</dt>
+            <dd class="col-sm-10">@booking.CheckOut</dd>
+            <dt class="col-sm-2">Status</dt>
+            <dd class="col-sm-10">@booking.Status</dd>
+            <dt class="col-sm-2">GuestAmount</dt>
+            <dd class="col-sm-10">@booking.GuestAmount</dd>
+            <dt class="col-sm-2">SpecialRequests</dt>
+            <dd class="col-sm-10">@booking.SpecialRequests</dd>
+            <dt class="col-sm-2">AccommodationId</dt>
+            <dd class="col-sm-10">@booking.AccommodationId</dd>
+            <dt class="col-sm-2">GuestId</dt>
+            <dd class="col-sm-10">@booking.GuestId</dd>
+        </dl>
+        <div>
+            <a href="@($"/bookings/edit?bookingid={booking.BookingId}")">Edit</a> |
+            <a href="@($"/bookings")">Back to List</a>
+        </div>
+    }
+</div>
+
+@code {
+    private BookingDTO booking;
+
+    [SupplyParameterFromQuery]
+    private int BookingId { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        // using var context = DbFactory.CreateDbContext();
+        // booking = await context.Bookings.FirstOrDefaultAsync(m => m.BookingId == BookingId);
+
+        if (booking is null)
+        {
+            NavigationManager.NavigateTo("notfound");
+        }
+    }
+}

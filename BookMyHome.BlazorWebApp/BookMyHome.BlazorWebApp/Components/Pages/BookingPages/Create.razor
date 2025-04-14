@@ -1,0 +1,72 @@
+﻿@page "/bookings/create"
+@using BookMyHome.Application.DTO
+@inject NavigationManager NavigationManager
+
+<PageTitle>Create</PageTitle>
+
+<h1>Create</h1>
+
+<h2>Booking</h2>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <EditForm method="post" Model="Booking" OnValidSubmit="AddBooking" FormName="create" Enhance>
+            <DataAnnotationsValidator />
+            <ValidationSummary class="text-danger" role="alert"/>
+            <div class="mb-3">
+                <label for="checkin" class="form-label">CheckIn:</label> 
+                <InputDate id="checkin" @bind-Value="Booking.CheckIn" class="form-control" aria-required="true"/> 
+                <ValidationMessage For="() => Booking.CheckIn" class="text-danger" /> 
+            </div>        
+            <div class="mb-3">
+                <label for="checkout" class="form-label">CheckOut:</label> 
+                <InputDate id="checkout" @bind-Value="Booking.CheckOut" class="form-control" aria-required="true"/> 
+                <ValidationMessage For="() => Booking.CheckOut" class="text-danger" /> 
+            </div>        
+            <div class="mb-3">
+                <label for="status" class="form-label">Status:</label> 
+                <InputSelect id="status" @bind-Value="Booking.Status" class="form-control" /> 
+                <ValidationMessage For="() => Booking.Status" class="text-danger" /> 
+            </div>        
+            <div class="mb-3">
+                <label for="guestamount" class="form-label">GuestAmount:</label> 
+                <InputNumber id="guestamount" @bind-Value="Booking.GuestAmount" class="form-control" aria-required="true"/> 
+                <ValidationMessage For="() => Booking.GuestAmount" class="text-danger" /> 
+            </div>        
+            <div class="mb-3">
+                <label for="specialrequests" class="form-label">SpecialRequests:</label> 
+                <InputText id="specialrequests" @bind-Value="Booking.SpecialRequests" class="form-control" /> 
+                <ValidationMessage For="() => Booking.SpecialRequests" class="text-danger" /> 
+            </div>        
+            <div class="mb-3">
+                <label for="accommodationid" class="form-label">AccommodationId:</label> 
+                <InputNumber id="accommodationid" @bind-Value="Booking.AccommodationId" class="form-control" /> 
+                <ValidationMessage For="() => Booking.AccommodationId" class="text-danger" /> 
+            </div>        
+            <div class="mb-3">
+                <label for="guestid" class="form-label">GuestId:</label> 
+                <InputNumber id="guestid" @bind-Value="Booking.GuestId" class="form-control" /> 
+                <ValidationMessage For="() => Booking.GuestId" class="text-danger" /> 
+            </div>          
+            <button type="submit" class="btn btn-primary">Create</button>
+        </EditForm>
+    </div>
+</div>
+
+<div>
+    <a href="/bookings">Back to List</a>
+</div>
+
+@code {
+    [SupplyParameterFromForm]
+    private BookingDTO Booking { get; set; } = new();
+
+    // To protect from overposting attacks, see https://learn.microsoft.com/aspnet/core/blazor/forms/#mitigate-overposting-attacks.
+    private async Task AddBooking()
+    {
+        // using var context = DbFactory.CreateDbContext();
+        // context.Bookings.Add(Booking);
+        // await context.SaveChangesAsync();
+        NavigationManager.NavigateTo("/bookings");
+    }
+}
